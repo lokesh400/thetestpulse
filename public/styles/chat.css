@@ -1,0 +1,165 @@
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: Arial, sans-serif;
+      background-color: #ece5dd;
+      color: #333;
+    }
+
+    /* Header */
+    .header {
+      background-color: #075e54;
+      padding: 15px;
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      width: 100%;
+      z-index: 10;
+    }
+
+    .header h3 {
+      margin: 0;
+    }
+
+    .header .status {
+      font-size: 12px;
+      color: #25d366;
+    }
+
+    /* Clear Chat Button */
+    .header .clear-chat-btn {
+      background-color: #ff4d4d;
+      color: white;
+      padding: 8px 15px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 14px;
+      border: none;
+      margin-right: 20px;
+    }
+
+    /* Main content (messages) */
+    #messages {
+      margin-top: 70px; /* To avoid overlapping with the header */
+      padding: 20px;
+      max-height: calc(100vh - 150px); /* Make messages container scrollable */
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Message bubbles */
+    .message {
+      max-width: 70%;
+      padding: 10px;
+      margin: 5px 0;
+      border-radius: 10px;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .message.sender {
+      background-color: #dcf8c6;
+      align-self: flex-end;
+    }
+
+    .message.recipient {
+      background-color: #ffffff;
+      align-self: flex-start;
+      border: 1px solid #ddd;
+    }
+
+    /* Input area */
+    .input-area {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      padding: 10px;
+      background-color: #fff;
+      border-top: 1px solid #ddd;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .input-area input {
+      width: 85%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 20px;
+      font-size: 14px;
+      outline: none;
+    }
+
+    .input-area button {
+      background-color: #25d366;
+      border: none;
+      padding: 10px;
+      border-radius: 50%;
+      cursor: pointer;
+      color: white;
+      font-size: 18px;
+    }
+
+    .input-area button:disabled {
+      background-color: #bbb;
+    }
+
+    /* Scrollbar customization */
+    ::-webkit-scrollbar {
+      width: 5px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background-color: #ccc;
+      border-radius: 5px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background-color: #888;
+    }
+
+    /* Custom Modal (for confirmation) */
+    .modal {
+      display: none; /* Hidden by default */
+      position: fixed;
+      z-index: 1;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.4); /* Black with opacity */
+      overflow: auto; /* Enable scroll if needed */
+      padding-top: 100px;
+    }
+
+    .modal-content {
+      background-color: white;
+      margin: auto;
+      padding: 20px;
+      border: 1px solid #888;
+      width: 300px;
+      text-align: center;
+      border-radius: 10px;
+    }
+
+    .modal-content button {
+      background-color: #25d366;
+      border: none;
+      padding: 10px 20px;
+      margin: 10px;
+      border-radius: 5px;
+      color: white;
+      cursor: pointer;
+    }
+
+    .modal-content button.cancel {
+      background-color: #f44336;
+    }

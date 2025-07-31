@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="/styles/quickaccess.css">
+    <link rel="stylesheet" href="/styles/popularbatches.css">
+    <link rel="stylesheet" href="/styles/studentsidebar.css">
+    <link rel="stylesheet" href="/styles/flash.css">
+    <link rel="stylesheet" href="/styles/student-mobile.css">
+    <link href="/styles/loader.css" rel="stylesheet" />
+    <script src="/js/loader.js"></script>
+</head>
+<body>
+
+    <%- include('./components/loader.ejs') %>
+
+    
+        <div id="successToast">
+        <div class="info__icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" viewBox="0 0 24 24" height="24" fill="none"><path fill="#393a37" d="m12 1.5c-5.79844 0-10.5 4.70156-10.5 10.5 0 5.7984 4.70156 10.5 10.5 10.5 5.7984 0 10.5-4.7016 10.5-10.5 0-5.79844-4.7016-10.5-10.5-10.5zm.75 15.5625c0 .1031-.0844.1875-.1875.1875h-1.125c-.1031 0-.1875-.0844-.1875-.1875v-6.375c0-.1031.0844-.1875.1875-.1875h1.125c.1031 0 .1875.0844.1875.1875zm-.75-8.0625c-.2944-.00601-.5747-.12718-.7808-.3375-.206-.21032-.3215-.49305-.3215-.7875s.1155-.57718.3215-.7875c.2061-.21032.4864-.33149.7808-.3375.2944.00601.5747.12718.7808.3375.206.21032.3215.49305.3215.7875s-.1155.57718-.3215.7875c-.2061.21032-.4864.33149-.7808.3375z"></path></svg>
+        </div>
+        <div class="info__title">Welcome Back <%= currUser.name %> ! </div>
+        </div>
+    
+
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+           <%- include("./components/student/sidebar.ejs") %>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+
+            <div class="welcome-banner">
+                <%- include("./components/student/welcome.ejs") %>
+            </div>
+
+            <div style="background-color: #ffffff;padding: 2px; border-radius: 10px;">
+                <h1 style="margin-left: 10px;">Quick Access</h1>
+            <div class="enrolled-courses">
+              <%- include("./components/student/enrolledbatches.ejs") %>
+            </div>
+            </div>
+
+            <hr>
+
+            <div>
+                <%- include("./components/student/popularbatches.ejs") %>
+              </div>
+
+            <div class="course-instructors">
+
+            </div>
+
+            <div class="daily-notice">
+               
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Footer Navigation for Mobile -->
+    <div class="header-container" >
+        <%- include("./components/student/student-header.ejs") %>
+    </div>
+
+    <div id="mobile-view">
+        <%- include("./components/student/mobile.ejs") %>
+      </div>
+
+ 
+<script src="https://kit.fontawesome.com/YOUR_KIT_ID.js"></script>
+<script>
+    // Auto-hide toast notifications after a specified time
+    setTimeout(() => {
+        const successToast = document.getElementById('successToast');
+        const errorToast = document.getElementById('errorToast');
+        if (successToast) {
+            successToast.style.display = 'none';
+        }
+    }, 5000); // Adjust timing as needed
+</script>
+
+</body>
+</html>

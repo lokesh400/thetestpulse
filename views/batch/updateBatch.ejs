@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Update</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
+  <!-- Roboto font -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
+</head>
+<body class="bg-gray-100 text-gray-800 font-['Roboto']">
+
+  <div class="flex min-h-screen">
+
+    <!-- Sidebar -->
+    <div class="w-64 bg-white border-r shadow-sm">
+      <%- include("../components/admin-sidebar.ejs") %>
+    </div>
+
+    <!-- Main Content -->
+    <div class="flex-1 p-8">
+      <h2 class="text-2xl font-bold mb-6">Select a Test to Include</h2>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        <% tests.forEach(test => { %>
+          <div class="bg-white rounded-xl shadow hover:shadow-md transition-all p-5 border border-gray-200">
+            <h4 class="text-lg font-semibold mb-4"><%= test.title %></h4>
+
+            <div class="flex justify-between items-center space-x-2">
+              <!-- Delete Form -->
+              <form action="/admin/delete/test/<%= test._id %>" method="post" onsubmit="deleteTest(event)">
+                <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition">
+                  <i class="fas fa-trash-alt mr-1"></i> Delete
+                </button>
+              </form>
+
+              <!-- Include Form -->
+              <form action="/create/<%= test._id %>/<%= id %>" method="POST">
+                <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition">
+                  <i class="fas fa-plus-circle mr-1"></i> Include
+                </button>
+              </form>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete Test Script -->
+  <script>
+    async function deleteTest(event) {
+      event.preventDefault();
+      const form = event.target;
+      const actionUrl = form.action;
+
+      try {
+        const response = await fetch(actionUrl, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        const data = await response.json();
+        if (response.ok) {
+          alert(data.message);
+          location.reload();
+        } else {
+          alert(data.error);
+        }
+      } catch (error) {
+        console.error('Error deleting test:', error);
+        alert('Error deleting test. Please try again.');
+      }
+    }
+  </script>
+
+</body>
+</html>

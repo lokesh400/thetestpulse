@@ -1,0 +1,88 @@
+.team_section {
+    padding: 50px 0;
+  }
+  
+  .team_container {
+    overflow-x: hidden; /* Hide the horizontal scrollbar */
+    position: relative;
+    width: 100%;
+  }
+  
+  .team-row {
+    display: flex;
+    flex-wrap: nowrap;
+    animation: scroll-horizontal 30s linear infinite; /* Automatic scroll animation */
+  }
+  
+  .team-member {
+    display: inline-block;
+    width: 25%; /* 4 members at a time on larger screens */
+    padding: 0 10px; /* Space between items */
+  }
+  
+  .team-member .box {
+    background: #f8f9fa;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    text-align: center;
+    transition: transform 0.3s ease;
+  }
+  
+  .team-member .box:hover {
+    transform: scale(1.05);
+  }
+  
+  .team-member .img-box img {
+    width: 100%;
+    height: auto;
+    border-radius: 50%;
+  }
+  
+  .detail-box h5 {
+    margin-top: 10px;
+    font-size: 1.2rem;
+    font-weight: bold;
+  }
+  
+  .detail-box p {
+    font-size: 1rem;
+    color: #777;
+  }
+  
+  /* Hide the scrollbar */
+  .team_container::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* Scroll animation for horizontal movement */
+  @keyframes scroll-horizontal {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-100%); /* Scrolls the full width of the team items */
+    }
+  }
+  
+  /* Mobile view: Only 1 team member visible at a time */
+  @media (max-width: 767px) {
+    .team-member {
+      width: 100%; /* 1 member at a time */
+    }
+  
+    .team-row {
+      animation: scroll-horizontal-mobile 10s linear infinite; /* Faster scroll for mobile */
+    }
+  }
+  
+  /* Mobile Scroll Animation (Shorter duration for a faster scroll) */
+  @keyframes scroll-horizontal-mobile {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-100%); /* Scrolls the full width of the team items */
+    }
+  }
+  

@@ -1,0 +1,241 @@
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    display: flex;
+    font-family: Arial, sans-serif;
+    overflow: hidden;
+  }
+
+  .sidebar {
+    padding: auto;
+    width: 280px;
+    background-color: white;
+    height: 100vh;
+    border-left: 1px solid #ccc;
+
+  }
+
+  .sidebar-button {
+    margin: 5px; 
+    height: 40px;
+    width: 40px;
+    background-color:#f3f1f1;
+    color: black;
+    border: 1 px solid rgba(0, 0, 0, 0.078);
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+
+  .content {
+    width: calc(100% - 250px);
+    margin-right: 1%;
+  }
+
+  #question-list{
+    margin-top: 200px;
+  }
+
+  .question-block {
+    display: none;
+  }
+
+  .active {
+    display: block;
+  }
+
+  .btn {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    margin: 10px;
+    transition: background-color 0.3s;
+  }
+
+  .btn:hover {
+    background-color: #0056b3;
+  }
+
+  .timer {
+    /* font-size: 24px; */
+    color: red;
+    width: 5%;
+    margin-top: px;
+
+  }
+
+  .answered {
+    background-color: #0056b3 !important; /* Color for answered questions */
+  }
+
+  .skipped {
+    background-color: rgb(255, 77, 0) !important; /* Color for skipped questions */
+  }
+
+  .title{
+      justify-content: center;
+      display: flex;
+      border-bottom: 2px solid rgba(0, 0, 0, 0.551);
+  }
+
+  #heading{
+      width: 90%;
+  }
+
+  .btn-container{
+      display: flex;
+      justify-content: right;
+  }
+
+  span{
+      font-size: xx-small;
+  }
+  #ques-img{
+      width: 40vw;
+  }
+  
+  /* From Uiverse.io by Na3ar-17 */ 
+.radio-input {
+display: flex;
+flex-direction: column;
+gap: 5px;
+}
+
+.radio-input * {
+box-sizing: border-box;
+padding: 0;
+margin: 0;
+}
+
+.radio-input label {
+display: flex;
+align-items: center;
+gap: 5px;
+padding: 0px 20px;
+width: 220px;
+cursor: pointer;
+height: 50px;
+position: relative;
+}
+
+.radio-input label::before {
+position: absolute;
+content: "";
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%);
+width: 220px;
+height: 45px;
+z-index: -1;
+transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+border-radius: 10px;
+border: 2px solid transparent;
+}
+.radio-input label:hover::before {
+transition: all 0.2s ease;
+background-color: #31c6d7a9;
+}
+
+.radio-input .label:has(input:checked)::before {
+background-color:#31c6d7a9;
+border-color: #31c6d7a9;
+height: 50px;
+}
+.radio-input .label .text {
+color:black;
+}
+
+.radio-input .label input[type="radio"] {
+/* background-color: #202030; */
+appearance: none;
+width: 17px;
+height: 17px;
+border-radius: 50%;
+display: flex;
+justify-content: center;
+align-items: center;
+}
+.radio-input .label input[type="radio"]:checked {
+background-color: #435dd8;
+-webkit-animation: puls 0.7s forwards;
+animation: pulse 0.7s forwards;
+}
+
+.radio-input .label input[type="radio"]:before {
+content: "";
+width: 6px;
+height: 6px;
+border-radius: 50%;
+transition: all 0.1s cubic-bezier(0.165, 0.84, 0.44, 1);
+background-color: #fff;
+transform: scale(0);
+}
+
+.radio-input .label input[type="radio"]:checked::before {
+transform: scale(1);
+}
+
+.footer {
+    position: fixed; /* Fix the footer */
+    left: 0; /* Align it to the left */
+    bottom: 0; /* Align it to the bottom */
+    width: 100%; /* Full width */
+    background-color:#53c3f7; /* Footer background color */
+    color: white; /* Footer text color */
+    text-align: center; /* Center text */
+    padding: 10px 0; /* Padding for spacing */
+}
+
+#attemptedCount{
+  font-size: small;
+  border: 2px solid #0056b3;
+  background-color: #0056b3;
+  border-radius: 3px;
+  padding: 5px;
+}
+
+#notAttemptedCount{
+  font-size: small;
+  border: 2px solid rgba(0, 128, 0, 0.716) ;
+  background-color: rgba(0, 128, 0, 0.716) ;
+  border-radius: 3px;
+  padding: 5px;
+}
+
+#skippedCount{
+  font-size: small;
+  border: 2px solid rgb(255, 77, 0) ;
+  background-color: rgb(255, 77, 0);
+  border-radius: 3px;
+  padding: 5px;
+}
+
+#counters{
+  background-color: rgba(0, 255, 255, 0.14);
+  width: fit-content;
+  margin: auto;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+#counters p{
+  width: 200px;
+  height: 25px;
+  padding-top: 5px;
+  padding-left: 5px;
+  margin: auto;
+  margin-top: 5px;
+}
+
+@keyframes pulse {
+0% {
+  box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4);
+}
+70% {
+  box-shadow: 0 0 0 8px rgba(255, 255, 255, 0);
+}
+100% {
+  box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+}
+}

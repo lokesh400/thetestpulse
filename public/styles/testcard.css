@@ -1,0 +1,141 @@
+.cookieCard {
+    width: 400px;
+    background: linear-gradient(to right,rgba(137, 104, 255, 0.759),rgba(174, 152, 255, 0.775));
+    margin: auto;
+    padding: 10px;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 10px;
+  }
+  
+  .cookieCard::before {
+    width: 150px;
+    height: 150px;
+    content: "";
+    background: linear-gradient(to right,rgb(142, 110, 255),rgb(208, 195, 255));
+    position: absolute;
+    z-index: 1;
+    border-radius: 50%;
+    right: -25%;
+    top: -25%;
+  }
+  
+  .cookieHeading {
+    /* font-size: 1.5em; */
+    font-weight: 600;
+    color: rgb(241, 241, 241);
+    z-index: 2;
+  }
+  
+  .cookieDescription {
+    font-size: 0.9em;
+    color: rgb(241, 241, 241);
+    z-index: 2;
+  }
+  
+  .cookieDescription a {
+    color: rgb(241, 241, 241);
+  }
+  
+  .acceptButton {
+    padding: 11px 20px;
+    background-color: #7b57ff;
+    transition-duration: .2s;
+    border: none;
+    color: rgb(241, 241, 241);
+    cursor: pointer;
+    font-weight: 600;
+    z-index: 2;
+    margin-left: 10px;
+  }
+  
+  .acceptButton:hover {
+    background-color: #714aff;
+    transition-duration: .2s;
+  }
+
+  a{
+    text-decoration: none;
+    color: white;
+  }
+
+  .confirm-box {
+    display: none;
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    border: 2px solid #333;
+    padding: 20px;
+    text-align: center;
+    z-index: 1000;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.confirm-box button {
+    margin: 5px;
+    padding: 10px 20px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.confirm-box button:hover {
+    background-color: #0056b3;
+}
+
+.toast {
+    visibility: hidden; /* Hidden by default */
+    min-width: 250px;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    border-radius: 5px;
+    padding: 16px;
+    position: fixed;
+    z-index: 1;
+    left: -300px; /* Start off-screen */
+    top: 30px;
+    width: 300px;
+    font-size: 17px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: right 0.5s ease-in-out; /* Smooth transition for sliding */
+    box-shadow: 0 4px 8px rgba(0, 179, 255, 0.2);
+}
+
+/* Loader bar container */
+.toast-loader {
+    height: 5px;
+    width: 100%;
+    background-color: black;
+    margin-top: 10px;
+    border-radius: 5px;
+    overflow: hidden;
+    position: relative;
+}
+
+/* The actual progress bar */
+.loader-progress {
+    height: 100%;
+    width: 100%; /* Starts full and shrinks */
+    background-color: #fff;
+    transition: width 3s linear; /* Shrinks over 3 seconds */
+}
+
+/* Show the toast with sliding from the right */
+.toast.show {
+    visibility: visible;
+    left: 30px; /* Slide to this position */
+}
+
+.toast.hide {
+    left: -300px; /* Slide out to hide */
+}
+
+  

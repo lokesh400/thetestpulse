@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <meta name="keywords" content="" />
+  <meta name="description" content="" />
+  <meta name="author" content="" />
+  <title> The Test Pulse </title>
+  <link rel="shortcut icon" href="images/favicon.png" type="">
+  <link rel="stylesheet" type="text/css" href="./css/bootstrap.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
+  <link href="./css/font-awesome.min.css" rel="stylesheet" />
+  <link href="./css/style.css" rel="stylesheet"/>
+  <link href="/styles/loader.css" rel="stylesheet" />
+  <link href="/styles/starting-animation.css" rel="stylesheet" />
+  <link href="/styles/our-team.css" rel="stylesheet" />
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9967030840996133"
+  crossorigin="anonymous">
+  </script>
+  <meta name="fast2sms" content="4DUmNCVaCuZDZCNDKPx0u1zPLW3NOQGl">
+</head>
+<body>
+
+  <div class="loading-overlay">
+    <%- include('./components/starting-animation.ejs') %>
+  </div>
+ 
+  <div class="hero_area">
+
+    <div class="hero_bg_box">
+      <div class="bg_img_box">
+        <img src="./images/hero-bg.png" alt="">
+      </div>
+    </div>
+
+    <!-- header section strats -->
+    <header class="header_section">
+      <%- include("./components/header.ejs") %>
+    </header>
+    <!-- end header section -->
+
+    <!-- slider section -->
+    <section class="slider_section ">
+      <%- include("./components/slider.ejs") %>
+    </section>
+    <!-- end slider section -->
+  </div>
+
+
+  <!-- service section -->
+  <section class="service_section layout_padding">
+    <%- include("./components/services.ejs") %>
+  </section>
+  <!-- end service section -->
+
+
+  <!-- about section -->
+  <section class="about_section layout_padding">
+    <div class="container  ">
+      <div class="heading_container heading_center">
+        <h2>
+          About <span>Us</span>
+        </h2>
+        <p>
+          At The Test Pulse, we are driven by the belief that testing is more than just a measure of knowledge—it’s a powerful tool to inspire learning, gauge understanding, and drive improvement. Our platform empowers educators, students, and institutions by providing cutting-edge tools for creating, managing, and analyzing tests and assessments.
+        </p>
+      </div>
+      <div class="row">
+        <div class="col-md-6 ">
+          <!-- <div class="img-box-1">
+            <img src="images/logo.png" alt="">
+          </div> -->
+        </div>
+        <div class="col-md-6">
+          <div class="detail-box">
+            <h3>
+              Why Choose The Test Pulse ?
+            </h3>
+            <p>
+
+            <b>Accuracy:</b> Every test, question, and report is crafted to provide reliable insights.
+            <br>
+            <b>Efficiency:</b> Our platform streamlines test creation and evaluation, saving time and enhancing productivity.
+            <br>
+            <b>Growth-Oriented:</b> We focus on data-driven insights that help both students and educators identify strengths and areas for improvement.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- end about section -->
+
+
+  <!-- why section -->
+  <section class="why_section layout_padding">
+    <%- include("./components/whyus.ejs") %>
+  </section>
+  <!-- end why section -->
+
+
+  <!-- team section -->
+  <section class="team_section layout_padding">
+    <%- include("./components/ourteam.ejs") %>
+  </section>
+  <!-- end team section -->
+
+  <section class="client_section layout_padding">
+  
+  </section>
+
+
+  <!-- info section -->
+  <section class="info_section layout_padding2">
+    <%- include("./components/info.ejs") %>
+  </section>
+  <!-- end info section -->
+
+  <!-- footer section -->
+  <section class="footer_section">
+    <div class="container">
+      <p>
+        &copy; <span id="displayYear"></span> All Rights Reserved By The Test Pulse.
+      </p>
+    </div>
+  </section>
+  <!-- footer section -->
+
+ 
+  <script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+  <script type="text/javascript" src="js/bootstrap.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+  <script> 
+  document.addEventListener('DOMContentLoaded', () => {
+  const loadingOverlay = document.querySelector('.loading-overlay');  
+  setTimeout(() => {
+    loadingOverlay.style.display = 'none';
+  }, 5000);
+});
+  </script>
+ 
+</body>
+
+</html>

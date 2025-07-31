@@ -1,0 +1,124 @@
+.unique-container {
+    width: 100%;
+    margin: 0 auto;
+    padding: 20px 0;
+}
+.unique-header {
+    text-align: center;
+}
+.unique-header h1 {
+    font-size: 2em;
+    margin: 0;
+}
+.unique-header p {
+    color: #6c757d;
+    margin: 5px 0 20px;
+}
+
+.unique-card-container {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+.unique-card {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 30%;
+    margin-bottom: 20px;
+    padding: 15px;
+    box-sizing: border-box;
+}
+.unique-card img {
+    width: 100%;
+    border-radius: 10px;
+}
+.unique-card .unique-badge {
+    background-color: #ffeb3b;
+    color: #000;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 0.8em;
+    position: absolute;
+    top: 15px;
+    right: 15px;
+}
+.unique-card .unique-title {
+    font-size: 1.2em;
+    font-weight: 700;
+    margin: 10px 0;
+}
+.unique-card .unique-subtitle {
+    color: #6c757d;
+    font-size: 0.9em;
+    margin-bottom: 10px;
+}
+.unique-card .unique-details {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+.unique-card .unique-details .unique-icon-text {
+    display: flex;
+    align-items: center;
+    font-size: 0.9em;
+    color: #6c757d;
+}
+.unique-card .unique-details .unique-icon-text i {
+    margin-right: 5px;
+}
+.unique-card .unique-price {
+    font-size: 1.2em;
+    font-weight: 700;
+    color: #28a745;
+}
+.unique-card .unique-price del {
+    color: #6c757d;
+    font-size: 0.9em;
+    margin-left: 5px;
+}
+.unique-card .unique-discount {
+    display: flex;
+    align-items: center;
+    color: #28a745;
+    font-size: 0.9em;
+    margin-bottom: 10px;
+}
+.unique-card .unique-discount i {
+    margin-right: 5px;
+}
+.unique-card .unique-buttons {
+    display: flex;
+    justify-content: space-between;
+}
+.unique-card .unique-buttons button {
+    width: 48%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    font-size: 0.9em;
+    cursor: pointer;
+}
+.unique-card .unique-buttons .unique-explore {
+    background-color: #e0e0e0;
+    color: #000;
+}
+.unique-card .unique-buttons .unique-buy-now {
+    background-color: #6200ea;
+    color: #fff;
+}
+
+@media (max-width:600px){
+
+    .unique-card {
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        width: 1000%;
+        margin-bottom: 20px;
+        padding: 15px;
+        box-sizing: border-box;
+    }
+
+}

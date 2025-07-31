@@ -1,0 +1,30 @@
+#input-div{
+    width: calc(100% - 40px);
+    height: 8vh;
+    margin: 20px;
+    border: 3px solid #ccc;
+    border-top: 0px;
+    text-align: center;
+    border-radius: 20px;
+}
+
+#input-div-1{
+    /* margin-top: 10px; */
+    display: flex;
+    justify-content: space-around;
+    background-color: rgba(0, 191, 255, 0.253);
+    padding: 20px;
+}
+
+#input-div-2{
+    border: none;
+    height: 35px;
+    border-radius: 20px;
+    text-align: center;
+}
+
+body{
+    background-color: #f2f2f2;
+    margin: 0;
+}
+

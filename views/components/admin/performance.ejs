@@ -1,0 +1,79 @@
+<section style="display: flex; gap: 20px;">
+          
+    <div class="performance" style=" width: 50%; height: 300px; overflow: auto;">
+      <div class="title">
+       <i class="fas fa-users">
+       </i>
+       <h3>
+        Member’s performance
+       </h3>
+      </div>
+      <div class="card">
+
+        <%for(let i=0;i<details.members.length;i++){%>
+            <div class="member">
+                <div class="member-info">
+                 <img alt="Profile picture of Shirley Hoe" height="40" src="https://storage.googleapis.com/a1aa/image/V8PNxNUjk1InDtHEGA9eik4FFU4111gE42hAidAXlTWSn75JA.jpg" width="40"/>
+                 <div>
+                  <p class="name">
+                    <%= details.members[i].name %>
+                  </p>
+                  <p class="role" style="color: red;">
+                    <%= details.members[i].email %>
+                  </p>
+                 </div>
+                </div>
+                <div class="member-status">
+                 <p>
+                    <%= details.members[i].role %>
+                 </p>
+                </div>
+               </div>
+        <%}%>
+
+       
+
+      </div>
+    </div>
+     
+    <div class="summary" style="display: flex; width:50% ; justify-content: center; text-align: center; justify-content: space-between; padding-top: 32px;">
+      <div style="width: 45%;">
+        <div class="summary-card" style="height: 100px; margin-bottom: 20px;">
+          <h3>
+           Total Subscription
+          </h3>
+          <p>
+           7652
+          </p>
+         </div>
+         <div class="summary-card">
+          <h3>
+           Order Status
+          </h3>
+          <p>
+           6325
+          </p>
+         </div>
+      </div>
+      
+      <div style="width: 45%;">
+        <div class="summary-card" style="background-color: #dc3545; color: white; margin-bottom: 20px;">
+          <h3>
+           489
+          </h3>
+          <p>
+           Total Comment
+          </p>
+         </div>
+         <div class="summary-card" style="background-color: #28a745; color: white;">
+          <h3>
+           $5782
+          </h3>
+          <p>
+           Income Status
+          </p>
+         </div>
+      </div>
+    </div>
+
+  </section>

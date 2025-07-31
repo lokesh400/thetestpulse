@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>All Tests</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@1.6.5/dist/flowbite.min.js"></script>
+  </head>
+  <body class="bg-gray-100 min-h-screen">
+    <main class="flex">
+      <!-- Sidebar -->
+      <div style="width: 250px;">
+        <%- include('../components/admin-sidebar.ejs') %>
+      </div>
+
+      <!-- Content -->
+      <div class="flex-1 p-8" style="width: calc(100% - 250px);" >
+        <h1 class="text-3xl font-bold mb-6 text-gray-800">All Tests</h1>
+
+        <% tests.forEach(test => { %>
+        <div class="bg-white shadow rounded-lg mb-6 max-w-2xl">
+          <div class="px-6 py-4 border-b">
+            <h2 class="text-xl font-semibold text-blue-700"><%= test.title %></h2>
+          </div>
+          <div class="px-6 py-4">
+            <p class="text-gray-600 mb-4">
+               <%= test.type %> ||
+              <%= test.questions.length*4 %> Marks
+            </p>
+            <div class="flex flex-wrap gap-3">
+              <a
+                href="/admin/test/<%= test._id %>"
+                class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded"
+                >Print</a
+              >
+              <a
+                href="/student/test/<%= test._id %>"
+                class="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded"
+                >Attempt</a
+              >
+              <button
+                type="button"
+                data-modal-target="modal-<%= test._id %>"
+                data-modal-toggle="modal-<%= test._id %>"
+                class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Modal -->
+        <div
+          id="modal-<%= test._id %>"
+          class="fixed inset-0 z-50 hidden overflow-y-auto bg-gray-900 bg-opacity-50 flex items-center justify-center"
+        >
+          <div class="bg-white rounded-lg shadow-lg w-full max-w-md">
+            <div class="px-6 py-4 border-b flex justify-between items-center">
+              <h3 class="text-lg font-semibold">Are you sure to delete?</h3>
+              <button
+                type="button"
+                class="text-gray-400 hover:text-gray-600"
+                onclick="document.getElementById('modal-<%= test._id %>').classList.add('hidden')"
+              >
+                &times;
+              </button>
+            </div>
+            <div class="px-6 py-4">
+              <p class="text-gray-600">This action cannot be undone.</p>
+            </div>
+            <div class="px-6 py-4 border-t flex justify-end gap-3">
+              <button
+                class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded"
+                onclick="document.getElementById('modal-<%= test._id %>').classList.add('hidden')"
+              >
+                Cancel
+              </button>
+              <form
+                id="deleteTestForm"
+                action="/admin/delete/test/<%= test._id %>"
+                method="post"
+                onsubmit="deleteTest(event)"
+              >
+                <button
+                  type="submit"
+                  class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded"
+                >
+                  Delete Test
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+        <% }) %>
+      </div>
+    </main>
+
+    <script>
+      async function deleteTest(event) {
+        event.preventDefault();
+        const form = event.target;
+        const actionUrl = form.action;
+
+        try {
+          const response = await fetch(actionUrl, {
+            method: 'DELETE',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
+
+          const data = await response.json();
+
+          if (response.ok) {
+            alert(data.message);
+            location.reload();
+          } else {
+            alert(data.error);
+          }
+        } catch (error) {
+          console.error('Error deleting item:', error);
+          alert('Error deleting item. Please try again.');
+        }
+      }
+    </script>
+  </body>
+</html>

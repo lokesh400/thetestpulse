@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Create Test</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 font-sans">
+  <div class="max-w-6xl mx-auto my-10 p-6 bg-white shadow-lg rounded-xl">
+    <h1 class="text-3xl font-bold text-center mb-10 text-gray-800">Create a New Test</h1>
+    <form action="/test/final" method="POST" id="testForm" class="space-y-8">
+
+      <div class="flex flex-wrap gap-6 items-end justify-between">
+        <div class="flex flex-col gap-4 flex-1 min-w-[250px]">
+          <div>
+            <label class="block text-gray-700 font-medium mb-1">Test Title</label>
+            <input type="text" name="title" required class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+          </div>
+
+          <div>
+            <label class="block text-gray-700 font-medium mb-1">Time (in minutes)</label>
+            <input type="number" name="time" required class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+          </div>
+
+          <div>
+            <label class="block text-gray-700 font-medium mb-1">Test Mode</label>
+            <select name="type2" required class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+              <option value="JEE">JEE</option>
+              <option value="NEET">NEET</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-gray-700 font-medium mb-1">Test Mode</label>
+            <select name="testMode" required class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+              <option value="Real">Real</option>
+              <option value="Practice">Practice</option>
+              <option value="Dpp">Dpp</option>
+            </select>
+          </div>
+        </div>
+
+        <button type="submit" class="bg-green-500 text-white font-semibold px-6 py-3 rounded-md hover:bg-green-600 transition">Create Test</button>
+      </div>
+
+      <div id="questions-container" class="mt-10 space-y-6">
+        <% for(let i = 0; i < data.length; i++) { %>
+        <div class="p-6 bg-gray-50 border border-gray-200 rounded-lg shadow-sm">
+          <h3 class="text-lg font-semibold text-gray-700 mb-4">Question <%= i + 1 %></h3>
+          <input type="text" name="questions[<%= i %>][questionText]" value="<%= data[i].Question %>" readonly required class="w-full px-4 py-2 mb-4 border border-gray-300 rounded-md bg-gray-100 text-gray-500 cursor-not-allowed">
+
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <input type="text" name="questions[<%= i %>][options][]" value="<%= data[i].Option1 %>" readonly required class="px-4 py-2 border border-gray-300 rounded-md bg-gray-100 text-gray-500 cursor-not-allowed">
+            <input type="text" name="questions[<%= i %>][options][]" value="<%= data[i].Option2 %>" readonly required class="px-4 py-2 border border-gray-300 rounded-md bg-gray-100 text-gray-500 cursor-not-allowed">
+            <input type="text" name="questions[<%= i %>][options][]" value="<%= data[i].Option3 %>" readonly required class="px-4 py-2 border border-gray-300 rounded-md bg-gray-100 text-gray-500 cursor-not-allowed">
+            <input type="text" name="questions[<%= i %>][options][]" value="<%= data[i].Option4 %>" readonly required class="px-4 py-2 border border-gray-300 rounded-md bg-gray-100 text-gray-500 cursor-not-allowed">
+          </div>
+
+          <div class="flex items-center mt-4 gap-6">
+            <div>
+              <label class="block text-gray-600 text-sm mb-1">Correct Option (0-3)</label>
+              <input type="number" name="questions[<%= i %>][correctAnswer]" value="<%= data[i].CorrectOption %>" readonly required class="w-20 px-3 py-2 border border-gray-300 rounded-md bg-gray-100 text-gray-500 cursor-not-allowed">
+            </div>
+
+            <div>
+              <label class="block text-gray-600 text-sm mb-1">Question Type</label>
+              <input type="text" name="questions[<%= i %>][questionType]" value="<%= data[i].questionType %>" readonly required class="px-4 py-2 border border-gray-300 rounded-md bg-gray-100 text-gray-500 cursor-not-allowed">
+            </div>
+          </div>
+        </div>
+        <% } %>
+      </div>
+
+    </form>
+  </div>
+</body>
+</html>

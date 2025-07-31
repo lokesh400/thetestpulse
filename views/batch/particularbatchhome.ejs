@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title><%= thisBatch.title %></title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 text-gray-800 font-sans">
+    <div class="flex min-h-screen">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-white shadow hidden md:block">
+            <%- include("../components/admin-sidebar.ejs") %>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="flex-1 p-6">
+            <h1 class="text-3xl font-bold mb-6"><%= thisBatch.title %></h1>
+
+            <!-- Navigation Buttons -->
+            <div class="flex flex-wrap gap-4 mb-6">
+                <button id="announcements-button" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Announcements</button>
+                <button id="tests-button" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Show Tests</button>
+                <% if (currUser && currUser.role === 'admin') { %>
+                    <button id="toggleButton" class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600">Add Announcement</button>
+                    <a href="/update-batch/<%=thisBatch._id%>" class="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700">Update</a>
+                    <a href="/upload/this/<%=thisBatch._id%>" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">Add Content</a>
+                    <a href="/api/ques/of/day/<%=thisBatch._id%>" class="bg-pink-600 text-white px-4 py-2 rounded hover:bg-pink-700">Ques Of Day</a>
+                <% } %>
+            </div>
+
+            <!-- Announcements Section -->
+            <div id="announcements" class="mb-8 hidden">
+                <ul id="announcement-list" class="space-y-2"></ul>
+            </div>
+
+            <!-- Tests Section -->
+            <div id="tests">
+                <% if (thisBatch && thisBatch.tests && thisBatch.tests.length > 0) { %>
+                    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <% thisBatch.tests.forEach(function(test) { %>
+                            <div class="bg-white shadow rounded p-4">
+                                <p class="font-semibold">Title: <%= test.title %></p>
+                            </div>
+                        <% }); %>
+                    </div>
+                <% } else { %>
+                    <p>No tests available.</p>
+                <% } %>
+            </div>
+        </div>
+    </div>
+
+    <!-- Overlay and Form -->
+    <div id="overlay" class="fixed inset-0 bg-black bg-opacity-50 hidden z-40" onclick="toggleForm()"></div>
+    <div id="myForm" class="fixed z-50 hidden left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-6 rounded shadow-md w-full max-w-md">
+        <h2 class="text-xl font-semibold mb-4">Create New Announcement</h2>
+        <form action="/create/new/announcement/<%=thisBatch._id%>" method="POST">
+            <label for="announcement" class="block mb-2 font-medium">Title</label>
+            <input id="announcement" name="text" placeholder="Enter New Announcement" class="w-full border border-gray-300 p-2 rounded mb-4" type="text" required />
+            <div class="flex justify-end gap-2">
+                <button type="button" onclick="toggleForm()" class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">Cancel</button>
+                <button type="submit" class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">Create</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        const batchId = '<%= thisBatch ? thisBatch._id : "defaultBatchId" %>';
+
+        document.getElementById('announcements-button').addEventListener('click', async () => {
+            document.getElementById('tests').classList.add('hidden');
+            document.getElementById('announcements').classList.remove('hidden');
+
+            try {
+                const response = await fetch(`/batch/${batchId}/announcements`);
+                if (!response.ok) return;
+
+                const announcements = await response.json();
+                const announcementList = document.getElementById('announcement-list');
+                announcementList.innerHTML = '';
+
+                if (announcements.length === 0) {
+                    announcementList.innerHTML = '<li>No announcements available.</li>';
+                } else {
+                    announcements.forEach(announcement => {
+                        const li = document.createElement('li');
+                        li.className = 'bg-white p-4 rounded shadow';
+                        li.textContent = announcement;
+                        announcementList.appendChild(li);
+                    });
+                }
+            } catch (error) {
+                console.error('Error fetching announcements:', error);
+            }
+        });
+
+        document.getElementById('tests-button').addEventListener('click', () => {
+            document.getElementById('announcements').classList.add('hidden');
+            document.getElementById('tests').classList.remove('hidden');
+        });
+
+        const toggleButton = document.getElementById('toggleButton');
+        const myForm = document.getElementById('myForm');
+        const overlay = document.getElementById('overlay');
+
+        toggleButton.addEventListener('click', () => {
+            const isVisible = myForm.classList.contains('hidden');
+            if (isVisible) {
+                myForm.classList.remove('hidden');
+                overlay.classList.remove('hidden');
+            } else {
+                myForm.classList.add('hidden');
+                overlay.classList.add('hidden');
+            }
+        });
+
+        function toggleForm() {
+            myForm.classList.add('hidden');
+            overlay.classList.add('hidden');
+        }
+    </script>
+</body>
+</html>

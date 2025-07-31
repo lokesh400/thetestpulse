@@ -1,0 +1,219 @@
+   body {
+            font-family: 'Roboto', sans-serif;
+            background-color:white;
+            margin: 0;
+            padding: 0;
+        }
+        .header {
+            background-color: #4285f4;
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .header .logo {
+            display: flex;
+            align-items: center;
+        }
+        .header .logo i {
+            font-size: 24px;
+            margin-right: 10px;
+        }
+        .header .menu {
+            display: flex;
+            align-items: center;
+        }
+        .header .menu i {
+            font-size: 20px;
+            margin: 0 10px;
+        }
+        .header .profile {
+            display: flex;
+            align-items: center;
+        }
+        .header .profile img {
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            margin-left: 10px;
+        }
+        .container {
+            padding: 20px;
+        }
+        .stats {
+            display: flex;
+            justify-content: space-between;
+        }
+        .stat-card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            flex: 1;
+            min-width: 200px;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .stat-card i {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        .stat-card h3 {
+            margin: 10px 0;
+            font-size: 20px;
+        }
+        .stat-card p {
+            margin: 0;
+            color: #888;
+        }
+        .performance {
+            margin-top: 20px;
+        }
+        .performance .title {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .performance .title i {
+            font-size: 20px;
+            margin-right: 10px;
+            color: #4285f4;
+        }
+        .performance .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        .performance .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .performance .member {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .performance .member:last-child {
+            border-bottom: none;
+        }
+        .performance .member img {
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            margin-right: 10px;
+        }
+        .performance .member-info {
+            display: flex;
+            align-items: center;
+        }
+        .performance .member-info p {
+            margin: 0;
+        }
+        .performance .member-info p.name {
+            font-weight: 500;
+        }
+        .performance .member-info p.role {
+            color: #888;
+        }
+        .performance .member-status {
+            display: flex;
+            align-items: center;
+        }
+        .performance .member-status p {
+            margin: 0;
+            font-weight: 500;
+        }
+        .performance .member-status i {
+            margin-left: 5px;
+        }
+        .summary {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .summary .summary-card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            flex: 1;
+            min-width: 200px;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        .summary .summary-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .summary .summary-card h3 {
+            margin: 10px 0;
+            font-size: 20px;
+        }
+        .summary .summary-card p {
+            margin: 0;
+            color: #888;
+        }
+        .summary .summary-card .status {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 10px;
+        }
+        .summary .summary-card .status i {
+            margin-left: 5px;
+        }
+        .upgrade {
+            background-color: #4285f4;
+            color: white;
+            border-radius: 8px;
+            padding: 10px 20px;
+            text-align: center;
+            margin-top: 20px;
+            display: inline-block;
+            transition: background-color 0.3s;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        .upgrade:hover {
+            background-color: #357ae8;
+        }
+        .upgrade i {
+            margin-right: 5px;
+        }
+        .icon-blue {
+            color: #4285f4;
+        }
+        .icon-green {
+            color: #28a745;
+        }
+        .icon-red {
+            color: #dc3545;
+        }
+        .icon-purple {
+            color: #6f42c1;
+        }
+        .icon-orange {
+            color: #fd7e14;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }

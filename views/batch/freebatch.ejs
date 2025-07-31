@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="/css/student.css">
+    <link rel="stylesheet" href="/styles/studentsidebar.css">
+    <link rel="stylesheet" href="/styles/popularbatches.css">
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <link href="/styles/loader.css" rel="stylesheet" />
+    <script src="/js/loader.js"></script>
+</head>
+<body>
+    <%- include('../components/loader.ejs') %>
+    
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+           <%- include("../components/student/sidebar.ejs") %>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+        
+            <div class="enrolled-courses">
+               <h1>Free Batches</h1>
+              <div class="unique-container">
+
+              <div class="unique-card-container">
+
+            <% allBatches.forEach(batch => { %>
+                <div class="unique-card">
+                 <img alt="Prayas JEE 90 days Crash Course 2025" height="150" src="<%=batch.thumbnail%>" width="300"/>
+                 <div class="unique-title">
+                  <%=batch.title%>
+                 </div>
+                
+                 <div class="unique-details">
+                  <div class="unique-icon-text">
+                   <i class="fas fa-calendar-alt">
+                   </i>
+                   <span>
+                    Starts on 21 Oct, 2024 | Ends on 30 Jun, 2025
+                   </span>
+                  </div>
+                 </div>
+                 <div class="unique-price">
+                  ₹<%=batch.amount%>
+                  <del>
+                   ₹<%=batch.amount*2%>
+                  </del>
+                 </div>
+                 <div class="unique-discount">
+                  <i class="fas fa-tag">
+                  </i>
+                  <span>
+                   Discount of 50% applied
+                  </span>
+                 </div>
+                 <div class="unique-buttons">
+                  <button class="unique-explore">
+                   EXPLORE
+                  </button>
+
+                  <%  
+                  const idd = batch._id;
+                  const purchased = currUser.purchasedBatches.includes(idd);
+              %>
+              
+              <% if (purchased) { %>
+                  <button class="unique-buy-now">
+                      <a style="text-decoration: none; color: white;" href="/showbatch/<%= batch._id %>">Study</a>
+                  </button>
+              <% } else { %>
+                  <form action="/free/<%= batch._id %>" method="POST">
+                    <button class="unique-buy-now"  style="width: 100px;">
+                        Pay ₹<%= batch.amount %>
+                    </button>
+                  </form>
+              <% } %>
+              
+                           
+            </div>
+        </div>
+          <% }) %>
+              
+           
+        </div>
+          </div>
+        </div>
+        
+        </div>
+    </div>
+
+
+     <!-- Footer Navigation for Mobile -->
+     <div class="header-container" >
+      <%- include("../components/student/student-header.ejs") %>
+     </div>
+
+    <div class="footer-nav">
+      <%- include("../components/student/footer.ejs") %>
+    </div>
+
+</body>
+</html>

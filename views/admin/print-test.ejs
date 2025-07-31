@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/styles/sidebar3.css">
+  <link
+      href="https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css"
+      rel="stylesheet"
+    />
+  <title><%= test.title %></title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    #h1{
+        background-color: white;
+        z-index: 2;
+    }
+
+    #question-container {
+      display: flex;
+      margin-top: 10px;
+      flex-wrap: wrap;
+      justify-content: space-around;
+      gap: 20px;
+      margin-bottom: 30px;
+      padding: 10px;
+      margin-top: 10px;
+    }
+
+    #main-content{
+      width: calc(100% - 260px);
+      border: 1px solid;
+      margin-left: 260px;
+    }
+
+    #question {
+      width: 45%;
+      position: relative;
+      z-index: 1;
+    }
+
+    #question-img {
+      max-width: 100%;
+      height: auto;
+      z-index: 1;
+      margin-left: 10px;
+    }
+
+    #question-number {
+      color: black;
+      font-size: 15px;
+      border-radius: 3px;
+      top: 10;
+      left: 10;
+    }
+
+    #button-container {
+      position: fixed;
+      left: 260px;
+      top: 2px;
+    }
+
+    button {
+      display: inline-block;
+      width: 200px;
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+      border-radius: 5px;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+    #vertical-line{
+        border: 1px solid black;
+        width: 0.5px;
+        height: calc(100% - 20px);
+        position: fixed;
+        top: 10px;
+        z-index: 1;
+        left: 50%;
+        opacity: 0.1;
+        visibility: hidden;
+    }
+
+    
+    /* Logo overlay styles */
+    #logo-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      height: 100%;
+      z-index: 1000;
+      pointer-events: none; /* Prevent the overlay from blocking interaction */
+    }
+
+    #logo-overlay img {
+      opacity: 0.2;
+      max-width: 400px; /* Adjust the size of the logo */
+      z-index: 1000; /* Ensure it stays in the background */
+    }
+    #option-container {
+    margin-left: 25px;    
+    display: flex;             /* Enable flexbox */
+    flex-wrap: wrap;           /* Allow items to wrap onto new lines */
+    gap: 20px;                 /* Space between the items */
+    }
+
+    .question-item {
+    flex-basis: calc(10% - 20px);  /* Each item takes up roughly 10% of the container's width, accounting for gaps */
+    display: flex;             /* Align question and answer horizontally */
+    justify-content: space-between;
+    align-items: center;      /* Center items vertically */
+    }
+
+    .question-text {
+    font-weight: bold;
+    }
+
+    .answer-text {
+    font-size: 1rem;
+    color: #333;
+    }
+
+    /* Print-specific styles */
+    @media print {
+      /* Hide the print button when printing */
+      #button-container {
+        display: none;
+      }
+      /* Prevent page breaks in unwanted places */
+      #question-container {
+        page-break-inside: avoid;
+      }
+
+      #main-content{
+      width: 100%;
+      margin-left: 0px;
+      border: none;
+      }
+      #vertical-line{
+        visibility: visible;
+    }
+
+      /* Optionally, remove any other UI elements that should not appear when printing */
+      header, footer, nav {
+        display: none !important;
+      }
+
+      /* Remove the default print headers and footers (date, time, page numbers) */
+      @page {
+        margin: 0;
+        margin-top: 10px;
+        size: auto;
+      }
+
+      /* Suppress printing the date and time in the header/footer */
+      @page :first {
+        margin-top: 10px;
+      }
+
+      /* Remove default footer and header */
+      * {
+        -webkit-print-color-adjust: exact;
+      }
+    }
+
+
+  </style>
+</head>
+<body>
+
+  <main style="display: flex;">
+
+    <div id="header-comp">
+        <%- include('../components/admin-sidebar.ejs') %>
+    </div>
+
+    <div id="main-content">
+        
+  <div id="logo-overlay">
+    <img src="/images/logo.png" alt="Logo">
+  </div>
+
+  <div id="h1">
+    <hr>
+    <br>
+    <h1><b>Topic:</b> <%= test.title %></h1>
+    <hr> <br><br>
+    <div id="button-container">
+        <button onclick="window.print()">Print this page</button>
+    </div>
+    <div style="display: flex;" >
+        <p style="margin-left: 40px;"><b>Total Time: <%= test.time %> Minutes</b></p>
+        <p style="margin-left: 50vw;" ><b>Total Marks: <%= test.questions.length*4 %> <br>&nbsp;+4  / -1</b></p>
+    </div>
+    <div style="margin-left: 50px;">
+        <section>
+            <h3>Instructions:</h3>
+            <% if(test.type === 'JEE'){%> 
+                <b>The exam duration is 3 hours.<br><br>
+                The paper consists of 75 questions (25 questions in each section: Physics, Chemistry, and Mathematics). <br><br>
+                The exam will be conducted in English. <br><br>
+                The total marks for the paper are 300. <br><br>
+                </b><%}%>
+                <% if(test.type === 'NEET'){%> 
+                <b>The exam duration is 3 hours and 20 minutes.<br><br>
+                The paper consists of 180 questions (45 questions in each section: Physics, Chemistry, Botany And Zoology). <br><br>
+                The exam will be conducted in English. <br><br>
+                The total marks for the paper are 720. <br><br>
+                </b><%}%>
+                <b>All Questions Are Compulsory.</b> <br><br>
+                <b>Correct Answer: +4 marks.</b> <br><br>
+                <b>Incorrect Answer: -1 mark</b> <br> <br>
+                <b>Unanswered Question: 0 marks.</b> <br> <br>
+        </section>
+    </div>
+    <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+    <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+    <h2 style="text-align: center;"><%= test.title %> - Answer Key</h2>
+    <br><br>
+    <div id="option-container">
+        <% test.questions.forEach(function(question, index) { %>
+          <div class="question-row">
+            <span class="question-text"> 
+              <p><b>Q<%= index + 1 %></b></p>
+            </span> 
+            <span class="answer-text">
+              &nbsp;(<%= question.correctAnswer + 1 %>)
+            </span>
+          </div>
+        <% }); %>
+      </div>
+      
+
+
+  </div>
+
+  <div id="vertical-line"></div>
+
+  <div id="question-container">
+    <% test.questions.forEach(function(question, index) { %>
+        <div id="question">
+            <b style="margin-left: -8px;position: absolute;top: 0;left: -8px; font-size: 0.8rem;"><%= index + 1 %>)</b>
+           <div>
+            <img id="question-img" src="<%= question.questionText %>" alt="Question Image">
+           </div>
+        </div>
+    <% }); %>
+  </div>
+
+
+    </div>
+
+
+  </main>
+ 
+</body>
+</html>

@@ -1,0 +1,22 @@
+body{
+    background-image: url("/images/logo.png");
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+h2{
+    text-align: center;
+}
+
+#inner-div{
+    margin: 20px;
+    word-wrap: break-word;
+    line-height: 1.5;
+    /* width: 90vw; */
+    background-color: rgba(0, 191, 255, 0.253);
+    padding: 10px;
+    border-radius: 20px;
+    border-top-left-radius: 0px;
+    border-bottom-left-radius: 0px;
+}
+ 

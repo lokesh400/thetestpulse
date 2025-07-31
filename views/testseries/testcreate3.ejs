@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .question-block {
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            padding: 10px;
+        }
+
+        #questions-container {
+            margin-top: 20px;
+        }
+
+        #selected-questions {
+            margin-top: 20px;
+            border-top: 2px solid #000;
+            padding-top: 10px;
+        }
+
+        img {
+            max-width: 200px;
+            margin-bottom: 10px;
+        }
+
+        label {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="main-container">
+        <h2>Create Test by Selecting Image Questions</h2>
+        <form action="/process" method="POST" id="testForm">
+            <div id="subject-selection">
+                <label for="subject">Subject:</label>
+                <select id="subject" name="subject" onchange="fetchChapters()" required>
+                    <option value="">Select Subject</option>
+                </select>
+
+                <label for="chapter">Chapter:</label>
+                <select id="chapter" name="chapter" onchange="fetchTopics()" required>
+                    <option value="">Select Chapter</option>
+                </select>
+
+                <label for="topic">Topic:</label>
+                <select id="topic" name="topic" onchange="fetchQuestions()" required>
+                    <option value="">Select Topic</option>
+                </select>
+            </div>
+
+            <div id="questions-container">
+                <!-- Image-based questions will be loaded here -->
+            </div>
+
+            <h3>Selected Questions</h3>
+            <div id="selected-questions">
+                <!-- Selected questions will be shown here -->
+            </div>
+
+            <button type="submit">Create Test</button>
+        </form>
+    </div>
+
+    <script>
+        let selectedQuestions = {}; // Store selected questions globally across topics/chapters
+
+        // Fetch subjects from the API and populate the dropdown
+        async function fetchSubjects() {
+            let response = await fetch('/api/subjects');
+            let data = await response.json();
+            const subjectDropdown = document.getElementById('subject');
+            subjectDropdown.innerHTML = '<option value="">Select Subject</option>';
+            data.forEach(subject => {
+                const option = document.createElement('option');
+                option.value = subject.Name;
+                option.textContent = subject.Name;
+                subjectDropdown.appendChild(option);
+            });
+        }
+
+        // Fetch chapters for the selected subject
+        async function fetchChapters() {
+            const subjectName = document.getElementById('subject').value;
+            let response = await fetch(`/api/chapters/${subjectName}`);
+            let data = await response.json();
+            const chapterDropdown = document.getElementById('chapter');
+            chapterDropdown.innerHTML = '<option value="">Select Chapter</option>';
+            data.forEach(chapter => {
+                const option = document.createElement('option');
+                option.value = chapter.ChapterName;
+                option.textContent = chapter.ChapterName;
+                chapterDropdown.appendChild(option);
+            });
+        }
+
+        // Fetch topics for the selected chapter
+        async function fetchTopics() {
+            const chapterName = document.getElementById('chapter').value;
+            let response = await fetch(`/api/topics/${chapterName}`);
+            let data = await response.json();
+            const topicDropdown = document.getElementById('topic');
+            topicDropdown.innerHTML = '<option value="">Select Topic</option>';
+            data.forEach(topic => {
+                const option = document.createElement('option');
+                option.value = topic.TopicName;
+                option.textContent = topic.TopicName;
+                topicDropdown.appendChild(option);
+            });
+        }
+
+        // Fetch questions for the selected topic (image-based questions)
+        async function fetchQuestions() {
+            const topic = document.getElementById('topic').value;
+
+            let response = await fetch(`/api/questions/${topic}`);
+            let data = await response.json();
+            const container = document.getElementById('questions-container');
+            container.innerHTML = ''; // Clear previous questions
+
+            data.forEach((question, index) => {
+                const questionBlock = document.createElement('div');
+                questionBlock.className = 'question-block';
+                const isChecked = selectedQuestions[question._id] ? 'checked' : ''; // Check if question is already selected
+                questionBlock.innerHTML = `
+                    <img src="${question.Question}" alt="Question Image">
+                    <label>
+                        <input type="checkbox" name="options[]" value="${question._id}" data-question="${question.QuestionImage}" ${isChecked}>
+                        Select Question ${index + 1}
+                    </label>
+                `;
+                container.appendChild(questionBlock);
+
+                // Attach event listener to handle selection
+                questionBlock.querySelector('input').addEventListener('change', handleQuestionSelect);
+            });
+        }
+
+        // Handle question selection and store in global object
+        function handleQuestionSelect(event) {
+            const checkbox = event.target;
+            const questionId = checkbox.value;
+            const questionImage = checkbox.getAttribute('data-question');
+
+            if (checkbox.checked) {
+                // Add the question to selectedQuestions if checked
+                selectedQuestions[questionId] = questionImage;
+            } else {
+                // Remove the question from selectedQuestions if unchecked
+                delete selectedQuestions[questionId];
+            }
+
+            updateSelectedQuestionsView();
+        }
+
+        // Update the selected questions section with images
+        function updateSelectedQuestionsView() {
+            const selectedContainer = document.getElementById('selected-questions');
+            selectedContainer.innerHTML = ''; // Clear previous selected questions
+
+            Object.keys(selectedQuestions).forEach((questionId, index) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.innerHTML = `
+                    <img src="${selectedQuestions[questionId]}" alt="Selected Question Image">
+                    <p>Selected Question ${index + 1}</p>
+                `;
+                selectedContainer.appendChild(questionDiv);
+            });
+        }
+
+        // Fetch the subjects on page load
+        fetchSubjects();
+    </script>
+</body>
+</html>

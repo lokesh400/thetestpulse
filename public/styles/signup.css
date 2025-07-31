@@ -1,0 +1,126 @@
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        #form-main-div {
+            background: #fff;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px #0000009a;
+            width: 80%;
+            margin: auto;
+            max-width: 400px;
+        }
+
+        .title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-align: center;
+            color: #333;
+        }
+
+        .message {
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            color: #666;
+        }
+
+        label {
+            display: block;
+            margin-top: 30px;
+            margin-bottom: 5px;
+        }
+
+        .input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .input:focus {
+            border-color: #007bff;
+        }
+
+        span {
+            position: absolute;
+            /* top: -1.2rem;
+            left: 0.75rem; */
+            background: #fff;
+            padding: 0 0.25rem;
+            font-size: 0.875rem;
+            color: #007bff;
+        }
+
+        .send-otp, .submit {
+            width: 100%;
+            padding: 0.75rem;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .send-otp {
+            background-color: #007bff;
+            color: #fff;
+            margin-top: 5px;
+            /* margin-bottom: 1rem; */
+        }
+
+        .send-otp:hover {
+            background-color: #0056b3;
+        }
+
+        .submit {
+            background-color: #28a745;
+            color: #fff;
+        }
+
+        .submit:hover {
+            background-color: #218838;
+        }
+
+        .signin {
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        .signin a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .signin a:hover {
+            text-decoration: underline;
+        }
+
+        #successToast {
+            display: flex;
+            align-items: center;
+            background-color: #f8d7da;
+            color: #ff0019;
+            padding: 1rem;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+        }
+
+        .info__icon {
+            margin-right: 0.5rem;
+        }
+
+        .info__title {
+            font-size: 1rem;
+        }

@@ -1,0 +1,117 @@
+        .batch-container {
+            width: 80%;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .batch-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .batch-header h1 {
+            font-size: 28px;
+            color: #3366ff;
+            font-weight: 700;
+        }
+        .batch-steps {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .batch-steps div {
+            width: 30px;
+            height: 30px;
+            background-color: #3366ff;
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 10px;
+            font-weight: 700;
+        }
+        .batch-steps div.active {
+            background-color: #3366ff;
+        }
+        .batch-steps div.inactive {
+            background-color: #ccc;
+        }
+        .batch-form-group {
+            margin-bottom: 20px;
+        }
+        .batch-form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+        .batch-form-group input, .batch-form-group textarea, .batch-form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        .batch-form-group textarea {
+            height: 100px;
+        }
+        .batch-form-group .batch-thumbnail {
+            border: 2px dashed #ccc;
+            padding: 20px;
+            text-align: center;
+            color: #999;
+            border-radius: 4px;
+        }
+        .batch-form-group .batch-thumbnail i {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        .batch-form-group .batch-thumbnail p {
+            margin: 0;
+        }
+        .batch-form-group .batch-thumbnail small {
+            display: block;
+            margin-top: 10px;
+        }
+        .batch-tips {
+            background-color: #3366ff;
+            color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .batch-tips h3 {
+            margin-top: 0;
+            font-size: 20px;
+            font-weight: 700;
+        }
+        .batch-tips ul {
+            list-style: none;
+            padding: 0;
+        }
+        .batch-tips ul li {
+            margin-bottom: 10px;
+        }
+        .batch-tips ul li:before {
+            content: "\f00c";
+            font-family: "Font Awesome 5 Free";
+            font-weight: 900;
+            margin-right: 10px;
+        }
+        .batch-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #3366ff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            text-align: center;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 700;
+        }
+        .batch-btn:hover {
+            background-color: #254eda;
+        }

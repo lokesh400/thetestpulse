@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Create Test</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 text-gray-800 min-h-screen p-6">
+  <div class="max-w-6xl mx-auto">
+    <h2 class="text-3xl font-bold mb-6 text-center">Create Test by Selecting Image Questions</h2>
+
+    <form action="/test/secondlastfinalsubmit" method="POST" id="testForm" class="space-y-8">
+      <!-- Subject/Chapter/Topic Dropdowns -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div>
+          <label class="block font-medium mb-1">Subject</label>
+          <select id="subject" name="subject" onchange="fetchChapters()" required class="w-full px-3 py-2 rounded border border-gray-300 focus:outline-none focus:ring">
+            <option value="">Select Subject</option>
+          </select>
+        </div>
+        <div>
+          <label class="block font-medium mb-1">Chapter</label>
+          <select id="chapter" name="chapter" onchange="fetchTopics()" required class="w-full px-3 py-2 rounded border border-gray-300 focus:outline-none focus:ring">
+            <option value="">Select Chapter</option>
+          </select>
+        </div>
+        <div>
+          <label class="block font-medium mb-1">Topic</label>
+          <select id="topic" name="topic" onchange="fetchQuestions()" required class="w-full px-3 py-2 rounded border border-gray-300 focus:outline-none focus:ring">
+            <option value="">Select Topic</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Selected Questions Count -->
+      <div class="text-lg font-semibold text-blue-600">
+        Selected Questions: <span id="question-count">0</span>
+      </div>
+
+      <!-- Image Questions Container (2 per row) -->
+      <div id="questions-container" class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <!-- Dynamically populated -->
+      </div>
+
+      <!-- Selected Questions Display -->
+      <div>
+        <h3 class="text-xl font-bold mb-4 border-t pt-4">Selected Questions</h3>
+        <div id="selected-questions" class="space-y-2 bg-white p-4 rounded shadow-sm">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+
+      <!-- Hidden Inputs for Submission -->
+      <div id="hidden-questions"></div>
+
+      <!-- Action Buttons -->
+      <div class="flex gap-4 justify-end">
+        <button type="button" id="addQuestionsBtn" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded transition">
+          Add Questions
+        </button>
+        <button type="submit" class="bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-2 rounded transition">
+          Submit Test
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    let selectedQuestions = {};
+
+    async function fetchSubjects() {
+      const response = await fetch('/test/api/subjects');
+      const data = await response.json();
+      const subjectDropdown = document.getElementById('subject');
+      subjectDropdown.innerHTML = '<option value="">Select Subject</option>';
+      data.forEach(subject => {
+        const option = document.createElement('option');
+        option.value = subject.Name;
+        option.textContent = subject.Name;
+        subjectDropdown.appendChild(option);
+      });
+    }
+
+    async function fetchChapters() {
+      const subject = document.getElementById('subject').value;
+      const response = await fetch(`/test/api/chapters/${subject}`);
+      const data = await response.json();
+      const chapterDropdown = document.getElementById('chapter');
+      chapterDropdown.innerHTML = '<option value="">Select Chapter</option>';
+      data.forEach(ch => {
+        const option = document.createElement('option');
+        option.value = ch.ChapterName;
+        option.textContent = ch.ChapterName;
+        chapterDropdown.appendChild(option);
+      });
+    }
+
+    async function fetchTopics() {
+      const chapter = document.getElementById('chapter').value;
+      const response = await fetch(`/test/api/topics/${chapter}`);
+      const data = await response.json();
+      const topicDropdown = document.getElementById('topic');
+      topicDropdown.innerHTML = '<option value="">Select Topic</option>';
+      data.forEach(topic => {
+        const option = document.createElement('option');
+        option.value = topic.TopicName;
+        option.textContent = topic.TopicName;
+        topicDropdown.appendChild(option);
+      });
+    }
+
+    async function fetchQuestions() {
+      const topic = document.getElementById('topic').value;
+      const response = await fetch(`/test/api/questions/${topic}`);
+      const data = await response.json();
+      const container = document.getElementById('questions-container');
+      container.innerHTML = '';
+
+      data.forEach((q) => {
+        const card = document.createElement('div');
+        card.className = `cursor-pointer transition transform hover:scale-105 border-2 p-4 rounded-lg bg-white shadow-md ${selectedQuestions[q._id] ? 'border-green-500 ring-2 ring-green-400' : 'border-gray-200'}`;
+        card.dataset.id = q._id;
+
+        card.innerHTML = `
+          <img src="${q.Question}" alt="Question Image" class="w-full h-48 object-contain mb-2 rounded">
+          <div class="text-center text-sm font-medium">${selectedQuestions[q._id] ? 'Selected' : 'Click to select'}</div>
+        `;
+
+        // Toggle select on click
+        card.addEventListener('click', () => toggleQuestionSelection(q._id, card));
+        container.appendChild(card);
+      });
+
+      updateSelectedQuestionsView();
+    }
+
+    function toggleQuestionSelection(id, card) {
+      if (selectedQuestions[id]) {
+        delete selectedQuestions[id];
+        card.classList.remove('border-green-500', 'ring-2', 'ring-green-400');
+        card.classList.add('border-gray-200');
+        card.querySelector('div').textContent = 'Click to select';
+      } else {
+        selectedQuestions[id] = true;
+        card.classList.add('border-green-500', 'ring-2', 'ring-green-400');
+        card.classList.remove('border-gray-200');
+        card.querySelector('div').textContent = 'Selected';
+      }
+      updateSelectedQuestionsView();
+    }
+
+    function updateSelectedQuestionsView() {
+      const container = document.getElementById('selected-questions');
+      const count = document.getElementById('question-count');
+      container.innerHTML = '';
+      const keys = Object.keys(selectedQuestions);
+      count.textContent = keys.length;
+
+      keys.forEach((id, index) => {
+        const div = document.createElement('div');
+        div.textContent = `Q${index + 1}: ${id}`;
+        container.appendChild(div);
+      });
+    }
+
+    document.getElementById('addQuestionsBtn').addEventListener('click', () => {
+      const hidden = document.getElementById('hidden-questions');
+      hidden.innerHTML = '';
+      Object.keys(selectedQuestions).forEach(id => {
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = 'options[]';
+        input.value = id;
+        hidden.appendChild(input);
+      });
+      alert('Questions added to form.');
+    });
+
+    // Load initial subjects
+    fetchSubjects();
+  </script>
+</body>
+</html>

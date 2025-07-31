@@ -1,0 +1,295 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Create Question</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <link href="https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css" rel="stylesheet"/>
+  <link rel="stylesheet" href="/styles/sidebar3.css">
+  <link rel="stylesheet" href="/styles/admin.css">
+  <style>
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f7fc;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    overflow-y: auto;
+}
+
+/* Link Styling */
+.create-chapter-link {
+    font-size: 18px;
+    color: #2c3e50;
+    text-decoration: none;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #f39c12;
+    transition: background-color 0.3s ease;
+    margin-bottom: 20px;
+    margin-top: 100px;
+}
+
+.create-chapter-link:hover {
+    background-color: #e67e22;
+}
+
+/* Form container */
+form {
+    background-color: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    /* max-width: 600px; */
+}
+
+/* Heading */
+h2 {
+    text-align: center;
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+/* Label styling */
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #333;
+}
+
+/* Select and Input Fields */
+select, input[type="file"], input[type="number"] {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 20px;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+    color: #333;
+}
+
+select:focus, input[type="file"]:focus, input[type="number"]:focus {
+    border-color: #3498db;
+    outline: none;
+}
+
+input[type="file"] {
+    padding: 10px;
+}
+
+/* Button Styling */
+button.submit-btn {
+    width: 100%;
+    padding: 12px;
+    background-color: #3498db;
+    color: white;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button.submit-btn:hover {
+    background-color: #2980b9;
+}
+
+/* Flash Message Styles */
+.flash-message {
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%); /* Center the message */
+    display: none; /* Initially hidden */
+    z-index: 9999; /* Ensure it's on top of other content */
+    min-width: 300px;
+    text-align: center;
+}
+
+.flash-message.success {
+    background-color: #4caf50;
+    color: white;
+}
+
+.flash-message.error {
+    background-color: #f44336;
+    color: white;
+}
+       
+        .drop-area {
+            width: 100%;
+            height: 50px;
+            border: 2px dashed #ccc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: #888;
+            font-size: 18px;
+            margin: 20px 0;
+            position: relative;
+        }
+
+        .drop-area.drag-over {
+            background-color: #f0f8ff;
+            border-color: #007bff;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .file-name {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            font-size: 16px;
+            color: #333;
+            font-weight: bold;
+        }
+
+  </style>
+</head>
+<body>
+   <div class="flash-message success" id="successMessage"></div>
+   <div class="flash-message error" id="errorMessage"></div>
+ 
+   <main>
+    <div id="header-comp">
+        <%- include('../components/admin-sidebar.ejs') %>
+    </div>
+
+    <div id="content-div">
+
+<form action="/api/create/ques/of/the/day" method="POST" id="testForm" enctype="multipart/form-data">
+  <div id="info">
+      <h2>Create Question Of The Day</h2>
+
+
+    <input type="text" value="<%= batchId %>" name="batchId" readonly>
+
+    <label>Subject</label>
+    <input type="text" name="subject" placeholder="Enter Subject Name">
+
+     <label>CorrectAnswer</label>
+     <select name="correctAnswer">
+        <option value="0">Option A</option>
+        <option value="1">Option B</option>
+        <option value="2">Option C</option>
+        <option value="3">Option D</option>
+     </select>
+
+      <div class="drop-area" id="drop-area">
+        <span>Drag & Drop your image here, or click to select</span>
+        <input type="file" name="file" id="file-input" required />
+        <div class="file-name" id="file-name"></div>
+      </div>
+      <button type="submit" class="submit-btn">Create Question</button>
+  </div>
+</form>
+
+</main>
+
+    <script>
+
+        // AJAX form submission
+        document.getElementById("testForm").addEventListener("submit", async function (event) {
+        event.preventDefault();  // Prevent the form from submitting normally
+
+    const formData = new FormData(this);
+
+    try {
+        const response = await fetch('/api/create/ques/of/the/day', {
+            method: 'POST',
+            body: formData,
+        });
+
+        const result = await response.json();
+
+        // Check if the response is successful or not
+        if (response.ok) {
+            document.getElementById("successMessage").innerText = result.message;
+            document.getElementById("successMessage").style.display = "block";
+
+            // Hide the success message after 2 seconds
+            setTimeout(() => {
+                document.getElementById("successMessage").style.display = "none";
+            }, 2000);  // Hide after 2 seconds
+
+        } else {
+            document.getElementById("errorMessage").innerText = result.message;
+            document.getElementById("errorMessage").style.display = "block";
+
+            // Hide the error message after 2 seconds
+            setTimeout(() => {
+                document.getElementById("errorMessage").style.display = "none";
+            }, 2000);  // Hide after 2 seconds
+        }
+    } catch (error) {
+        console.error("Error submitting form:", error);
+        document.getElementById("errorMessage").innerText = 'An error occurred. Please try again later.';
+        document.getElementById("errorMessage").style.display = "block";
+
+        // Hide the error message after 2 seconds
+        setTimeout(() => {
+            document.getElementById("errorMessage").style.display = "none";
+        }, 2000);  // Hide after 2 seconds
+    }
+});
+
+const dropArea = document.getElementById('drop-area');
+        const fileInput = document.getElementById('file-input');
+        const fileNameDisplay = document.getElementById('file-name');
+
+        // Trigger the file input when the user clicks on the drop area
+        dropArea.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        // Prevent the default behavior of the browser when dragging over the drop area
+        dropArea.addEventListener('dragover', (event) => {
+            event.preventDefault();
+            dropArea.classList.add('drag-over');
+        });
+
+        // Remove the "drag-over" class when drag leaves the drop area
+        dropArea.addEventListener('dragleave', () => {
+            dropArea.classList.remove('drag-over');
+        });
+
+        // Handle the drop event when a file is dropped
+        dropArea.addEventListener('drop', (event) => {
+            event.preventDefault();
+            dropArea.classList.remove('drag-over');
+            const files = event.dataTransfer.files;
+            fileInput.files = files;
+            displayFileName(files[0]);
+        });
+
+        // Optional: Display the selected file name
+        fileInput.addEventListener('change', () => {
+            if (fileInput.files.length > 0) {
+                displayFileName(fileInput.files[0]);
+            }
+        });
+
+        // Function to display the file name
+        function displayFileName(file) {
+            if (file) {
+                fileNameDisplay.textContent = `Selected file: ${file.name}`;
+            }
+        }
+
+    </script>
+</body>
+</html>

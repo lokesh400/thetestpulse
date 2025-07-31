@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin HomePage</title>
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet"/>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="/styles/sidebar3.css">
+  <link rel="stylesheet" href="/styles/admin.css">
+  <link rel="stylesheet" href="/styles/admin-dashboard.css">
+</head>
+
+<body class="bg-gray-50 font-roboto" style="display: flex;">
+
+
+  <%- include('../components/admin-sidebar.ejs') %>
+  <div id="contentWrapper" class="transition-all duration-300 md:ml-64" style="width: calc(100% - 250px);margin-left: 250px;" >
+
+    <div class="hidden md:flex items-center justify-between px-6 py-4 bg-white shadow" style="height: 99px;">
+       <button id="sidebarToggle" class="text-2xl">
+        <i class='bx bx-menu'></i>
+      </button>
+      <div>
+
+      </div>
+      <div class="flex items-center gap-4">
+        <i class="fas fa-bell text-gray-500 text-lg"></i>
+        <span class="font-medium text-gray-700"><%= currUser.name %></span>
+        <img
+          class="w-10 h-10 rounded-full object-cover"
+          src="https://storage.googleapis.com/a1aa/image/7bPZUeraeNpeTpQ42wUVy9xLTsHJLmNTf2eCk6Mf463qoz98E.jpg"
+          alt="<%= currUser.name %>'s profile picture"
+        />
+      </div>
+    </div>
+
+    <!-- ✅ Main content -->
+    <main class="p-6">
+      <div class="space-y-6">
+        <%- include('../components/admin/stats.ejs') %>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const sidebar  = document.getElementById('sidebar');        // from the partial
+    const toggle   = document.getElementById('sidebarToggle');   // mobile button
+    const content  = document.getElementById('contentWrapper');  // shifts on desktop
+
+    if (toggle && sidebar && content) {
+      toggle.addEventListener('click', () => {
+        sidebar.classList.toggle('-translate-x-full'); // slide in/out
+        content.classList.toggle('md:ml-64');          // full width when hidden
+      });
+    }
+  </script>
+
+</body>
+</html>

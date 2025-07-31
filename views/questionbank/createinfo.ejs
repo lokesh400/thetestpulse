@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Create Subject, Chapter, and Topic</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        background: #f8f9fa;
+      }
+      .card {
+        border-radius: 1rem;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      }
+      .form-section {
+        margin-bottom: 2rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container mt-5">
+      <% if (message && message.length > 0) { %>
+        <div class="alert alert-success"><%= message %></div>
+      <% } %>
+      <% if (error && error.length > 0) { %>
+        <div class="alert alert-danger"><%= error %></div>
+      <% } %>
+
+      <div class="card p-4">
+        <h3 class="mb-4 text-center">Create Subject, Chapter, and Topic</h3>
+
+        <!-- Subject Section -->
+        <div class="form-section">
+          <form action="/create/subject" method="POST" class="d-flex gap-2">
+            <select name="subject" id="subjectSelect" class="form-select w-50">
+              <option value="" disabled selected>Select a subject</option>
+              <% subjects.forEach(sub => { %>
+                <option value="<%= sub.Name %>"><%= sub.Name %></option>
+              <% }) %>
+            </select>
+            <input type="text" name="subject" class="form-control w-50" placeholder="Or add new subject" required />
+            <button class="btn btn-success">Add Subject</button>
+          </form>
+        </div>
+
+        <!-- Chapter Section -->
+        <div class="form-section">
+          <form action="/create/chapter" method="POST" class="d-flex gap-2">
+            <select name="subject" id="chapterSubjectSelect" class="form-select w-50" required>
+              <option value="" disabled selected>Select Subject for Chapter</option>
+              <% subjects.forEach(sub => { %>
+                <option value="<%= sub.Name %>"><%= sub.Name %></option>
+              <% }) %>
+            </select>
+            <input type="text" name="chapter" class="form-control w-50" placeholder="Add new chapter" required />
+            <button class="btn btn-primary">Add Chapter</button>
+          </form>
+        </div>
+
+        <!-- Topic Section -->
+        <div class="form-section">
+          <form action="/create/topic" method="POST" class="d-flex flex-column gap-3">
+            <div class="d-flex gap-2">
+              <select name="subject" id="topicSubjectSelect" class="form-select" required>
+                <option value="" disabled selected>Select Subject</option>
+                <% subjects.forEach(sub => { %>
+                  <option value="<%= sub.Name %>"><%= sub.Name %></option>
+                <% }) %>
+              </select>
+
+              <select name="chapter" id="topicChapterSelect" class="form-select" required>
+                <option value="" disabled selected>Select Chapter</option>
+              </select>
+            </div>
+
+            <div class="d-flex gap-2">
+              <input type="text" name="topic" class="form-control" placeholder="Add new topic" required />
+              <button class="btn btn-dark">Add Topic</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const topicSubjectSelect = document.getElementById("topicSubjectSelect");
+      const topicChapterSelect = document.getElementById("topicChapterSelect");
+
+      topicSubjectSelect.addEventListener("change", async () => {
+        const subject = topicSubjectSelect.value;
+        const res = await fetch(`/api/chapters/${subject}`);
+        const chapters = await res.json();
+
+        topicChapterSelect.innerHTML = '<option disabled selected>Select Chapter</option>';
+        chapters.forEach(ch => {
+          const opt = document.createElement("option");
+          opt.value = ch.ChapterName;
+          opt.innerText = ch.ChapterName;
+          topicChapterSelect.appendChild(opt);
+        });
+      });
+    </script>
+  </body>
+</html>

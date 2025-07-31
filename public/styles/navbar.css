@@ -1,0 +1,23 @@
+#logo-img{
+    height: 100px;
+    width: 100px;
+}
+
+.background{
+    background-color:white;
+    border-bottom: 2px solid ;
+}
+
+/* #main1{
+    display: flexbox;
+}
+
+#left-div{
+    width: 80%;
+    background-color: aqua;
+}
+
+#right-div{
+    width: 20%;
+    background-color: black;
+} */
