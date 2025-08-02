@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 const QuestionSchema = new mongoose.Schema({
+    addedBy:String,
     SubjectName : String,
     ChapterName : String,
     TopicName: String,

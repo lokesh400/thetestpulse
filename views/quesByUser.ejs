@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Questions by <%= namee %></title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen py-10 px-4">
+  <div class="max-w-3xl mx-auto bg-white p-8 rounded-2xl shadow-md">
+    <h1 class="text-2xl font-bold text-gray-800 mb-4">Questions by <span class="text-blue-600"><%= namee %></span></h1>
+
+    <p class="text-gray-600 mb-6">Total Questions: <span class="font-semibold"><%= total %></span></p>
+
+    <ul class="divide-y divide-gray-200">
+      <% if (questions.length > 0) { %>
+        <% questions.forEach((q, index) => { %>
+          <li class="py-3">
+            <span class="font-medium text-gray-700">Q<%= index + 1 %>:</span>
+            <span class="text-gray-800">Subject - <%= q.SubjectName %></span>
+            <span class="text-sm text-gray-500 ml-4">ID: <%= q._id %></span>
+          </li>
+        <% }) %>
+      <% } else { %>
+        <li class="text-gray-500 italic">No questions found.</li>
+      <% } %>
+    </ul>
+    
+  </div>
+</body>
+</html>

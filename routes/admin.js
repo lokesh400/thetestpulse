@@ -1,27 +1,15 @@
 const express = require("express");
 const router =  express.Router();
 const User = require('../models/User');
+const userTeacher = require('../models/userTeacher');
 const Test = require('../models/Test');
 const Question = require('../models/Question');
 const Batch = require('../models/Batch');
-// const StudentTest = require('../models/StudentTest');
-
-  function ensureAuthenticated(req, res, next) {
-    if (req.isAuthenticated()) {
-      return next();
-    }
-    res.redirect('/user/login');
-  }
+const nodemailer = require("nodemailer")
+const {isAdmin,isAllowed,isLoggedIn} = require('../middlewares/login')
 
 
-  function isAdmin(req, res, next) {
-    if (req.isAuthenticated() && req.user.role === 'admin') {
-      return next();
-    }
-    res.render("./error/accessdenied.ejs");
-  }
-
-  router.get("/admin", ensureAuthenticated, isAdmin, async (req, res) => {
+  router.get("/admin", isLoggedIn, isAllowed, async (req, res) => {
     try {
       const Users = await User.find();
       const Members = await User.find({ role: "admin" });
@@ -46,7 +34,7 @@ const Batch = require('../models/Batch');
   });
  
 // ADMIN ROUTE TO DELETE A TEST  
-router.delete('/admin/delete/test/:id', async (req, res) => {
+router.delete('/admin/delete/test/:id',isLoggedIn,isAllowed, async (req, res) => {
   const testId = req.params.id; // Get the test ID from the request parameters
   try {
     const result = await Test.findByIdAndDelete(testId);
@@ -70,15 +58,108 @@ router.delete('/admin/delete/test/:id', async (req, res) => {
 });
 
   // Admin Route - List all tests
-router.get('/admin/tests', async (req, res) => {
+router.get('/admin/tests',isLoggedIn,isAllowed, async (req, res) => {
     const tests = await Test.find({}); // Fetch all tests from the database
     res.render('./testseries/admin-test', { tests });
   });
   
-router.get('/admin/test/:id', async (req, res) => {
+router.get('/admin/test/:id',isLoggedIn,isAllowed, async (req, res) => {
     const test = await Test.findById(req.params.id);
     res.render('./admin/print-test.ejs', { test });
   });
+
+  // route to show all the users
+  /////////////////////////////
+
+  router.get('/admin/users',isLoggedIn,isAdmin, async (req, res) => {
+  try {
+    const users = await userTeacher.find();
+    res.render('admin/allUsers.ejs', { users });
+  } catch (err) {
+    res.status(500).send('Error fetching users');
+  }
+});
+
+////////////admin route to add user////////
+//////////////////////////////////////////
+
+router.get('/admin/add/new/teacher',isLoggedIn,isAdmin, (req, res) => {
+  res.render('admin/addTeacher');
+});
+
+// POST route to add teacher
+router.post('/admin/add/new/teacher',isLoggedIn,isAdmin, async (req, res) => {
+  const { name, contactNumber, email, username, password } = req.body;
+
+  try {
+    // Check if username or email already exists
+    const existingUser = await userTeacher.findOne({ username });
+    if (existingUser) {
+      return res.status(400).send("Username or Email already exists");
+    }
+
+    // Register new teacher
+    const newUser = new userTeacher({
+      name,
+      contactNumber,
+      email,
+      username,
+      role:'teacher'
+    });
+
+    await userTeacher.register(newUser, password);
+
+    // Setup nodemailer
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      host: 'smtp.gmail.com',
+      port: 587,
+      secure: false,
+      auth: {
+        user: "lokeshbadgujjar401@gmail.com",
+        pass: process.env.mailpass
+      }
+    });
+
+    // Send credentials email
+    const mailOptions = {
+      from: '"The Test Pulse" <lokeshbadgujjar401@gmail.com>',
+      to: email,
+      subject: 'Your The Test Pulse Credentials',
+      text: `Dear ${name},\n\nHere are your credentials for The Test Pulse:\nUsername: ${username}\nPassword: ${password}\n\nPlease change your password after logging in.\n\nRegards,\nThe Test Pulse Team`
+    };
+
+    await transporter.sendMail(mailOptions);
+
+    res.redirect('/admin');
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error creating teacher user');
+  }
+});
+
+////route to show all questions by a user///////////////////
+router.get("/questions/by-user/:username",isLoggedIn,isAllowed, async (req, res) => {
+  const { username } = req.params;
+
+  try {
+    const user = await userTeacher.findById(username);
+    const namee = user.name;
+    const questions = await Question.find({ addedBy: username }).select("_id SubjectName");
+    const total = questions.length;
+
+    res.render("quesByUser", {
+      namee,
+      total,
+      questions
+    });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error fetching questions");
+  }
+});
+
 
 
 module.exports = router;

@@ -26,9 +26,19 @@
     <li>
       <a href="/create/question/bank" class="flex items-center px-4 py-3 rounded-lg hover:bg-indigo-100 transition">
         <i class='bx bx-folder-plus text-xl mr-3'></i>
+        <span>Update Library</span>
+      </a>
+    </li>
+
+
+    <% if(currUser && currUser.role === 'admin') {%>
+      <li>
+      <a href="/create/information" class="flex items-center px-4 py-3 rounded-lg hover:bg-indigo-100 transition">
+        <i class='bx bx-folder-plus text-xl mr-3'></i>
         <span>Create Library</span>
       </a>
     </li>
+    <%}%>  
 
     <li>
       <a href="/admin/tests" class="flex items-center px-4 py-3 rounded-lg hover:bg-indigo-100 transition">
@@ -50,6 +60,21 @@
         <span>All Batches</span>
       </a>
     </li>
+
+     <li>
+      <a href="/admin/add/new/teacher" class="flex items-center px-4 py-3 rounded-lg hover:bg-indigo-100 transition">
+        <i class='bx bx-group text-xl mr-3'></i>
+        <span>Add Teacher</span>
+      </a>
+    </li>
+
+    <li>
+      <a href="/admin/users" class="flex items-center px-4 py-3 rounded-lg hover:bg-indigo-100 transition">
+        <i class='bx bx-group text-xl mr-3'></i>
+        <span>Users</span>
+      </a>
+    </li>
+
   </ul>
 
   <div class="mt-auto border-t pt-4 px-2 space-y-2">

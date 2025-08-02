@@ -22,6 +22,7 @@ const Test = require('./models/Test');
 const User = require('./models/User');
 const Batch = require('./models/Batch');
 const Question = require('./models/Question');
+const userTeacher = require('./models/userTeacher');
 
 const userrouter = require("./routes/user.js");
 const testrouter = require("./routes/testseries.js");
@@ -99,9 +100,9 @@ app.use(flash());
 
 app.use(passport.initialize());
 app.use(passport.session());
-passport.use(new localStrategy(User.authenticate()));
-passport.serializeUser(User.serializeUser());
-passport.deserializeUser(User.deserializeUser());
+passport.use(new localStrategy(userTeacher.authenticate()));
+passport.serializeUser(userTeacher.serializeUser());
+passport.deserializeUser(userTeacher.deserializeUser());
 
 app.use((req, res, next) => {
     res.locals.success_msg = req.flash('success_msg');

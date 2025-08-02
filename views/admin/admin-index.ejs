@@ -28,12 +28,16 @@
       </div>
       <div class="flex items-center gap-4">
         <i class="fas fa-bell text-gray-500 text-lg"></i>
-        <span class="font-medium text-gray-700"><%= currUser.name %></span>
-        <img
+        <span class="font-medium text-gray-700"><b>Welcome Back: </b><%= currUser.name %></span>
+        <br>
+        <span class="font-medium text-gray-700"><b>Role: </b><%= currUser.role %></span>
+        <a href="/questions/by-user/<%= currUser._id %>">
+               <img
           class="w-10 h-10 rounded-full object-cover"
           src="https://storage.googleapis.com/a1aa/image/7bPZUeraeNpeTpQ42wUVy9xLTsHJLmNTf2eCk6Mf463qoz98E.jpg"
-          alt="<%= currUser.name %>'s profile picture"
+          alt="<%= currUser.name %>'s profile picture" %>
         />
+        </a>
       </div>
     </div>
 
