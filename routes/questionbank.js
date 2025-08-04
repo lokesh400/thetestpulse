@@ -264,7 +264,7 @@ router.get('/api/questions/:name',isLoggedIn,isAllowed, async (req,res) => {
 router.get('/create/information',isLoggedIn,isAdmin, async (req, res) => {
   try {
     const subjects = await Subject.find({});
-    res.render('./questionbank/createinfo', { subjects, message: req.flash('success'), error: req.flash('error') });
+    res.render('./questionbank/createinfo', { subjects, success: req.flash('success'), error: req.flash('error') });
   } catch (error) {
     req.flash('error', 'Error loading details.');
     res.redirect('/');

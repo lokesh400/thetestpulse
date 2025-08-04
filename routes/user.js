@@ -16,70 +16,7 @@ function ensureAuthenticated(req, res, next) {
     res.redirect('/user/login');
   }
 
-// Signup route
-router.get('/signup', (req, res) => {
-    req.flash('error_msg', 'Hello Dear');
-    res.render("./users/signup.ejs");
-});
-
-// router.post('/signup', async (req, res) => {
-//     const {name,email, password ,confirmpassword,otp,contactNumber} = req.body;
-//     const role = "student";
-//     const username = email;
-//     let user = await Otp.findOne({ email });
-//     if(password==confirmpassword&&otp==user.otp){
-//         const newUser = new User({name,role, email, username,contactNumber });
-//     try {
-//         // Attempt to register the new user
-//         const registeredUser = await User.register(newUser, password);
-//         //sendimg greeting mail
-
-//         const transporter = nodemailer.createTransport({
-//             service:'gmail',
-//             host:'smtp.gmail.com',
-//             secure:false,
-//             port:587,
-//             auth:{
-//              user:"lokeshbadgujjar401@gmail.com",
-//              pass:process.env.mailpass
-//             }
-//            });
-        
-//            try{
-//               const mailOptions = await transporter.sendMail({
-//                 from:"lokeshbadgujjar401@gmail.com",
-//                 to: `${email}`,
-//                 subject: 'Welcome to TheTestPulseFamily',
-//                 text: `Dear ${name} welcome to TheTestPulse Family.`,
-//             });
-//         } catch(error){
-//             transporter.sendMail(mailOptions,(error,info)=>{
-//                 if(error){
-//                     console.log(error)
-//                 }
-//                 else{
-//                     console.log(info+response);
-//                 }
-//             })
-//         }
-//         // Redirect to login page after successful registration
-//         res.redirect('/user/login');
-//     } catch (error) {
-//         console.error(error);
-//         // Render signup page with an error message
-//         req.flash('error_msg', error.message);
-//         res.render("./users/signup.ejs");
-//     }
-//     }
-//     else{
-//         res.render("./users/signup.ejs", {error : "password do not match"});
-//     } 
-// });
-
-// Login route
-
 router.get("/login", (req, res) => {
-    req.flash('error_msg', 'Welcome back');
     res.render("./users/login.ejs");
 });
 
@@ -128,22 +65,24 @@ router.get("/forget-password", (req, res, next) => {
 
 router.post('/forget/password', async (req, res) => {
     const { otp,newPassword, confirmNewPassword,email } = req.body;
-    // Validate new passwords match
-    let candidate = await Otp.findOne({ email });
+    const user1 = await userTeacher.findOne({ username:email });
+    let candidate = await Otp.findOne({ email: user1.email });
     if(newPassword==confirmNewPassword&&otp==candidate.otp){
     try {
-        const student = await User.findOne({email});
-        // Update to new password
+        const student = await userTeacher.findOne({username:email});
         await student.setPassword(newPassword);
         await student.save();
-        req.flash('success_msg', 'Password Reset Successfully');
-        req.flash('error_msg', 'Password Reset Successfully');
-        res.render('./users/login.ejs');
+        req.flash('success_msg', 'Password updated successfully. You can now login with your new password.');
+        // Send confirmation email
+        res.redirect('/user/login');
     } catch (error) {
         console.error("Error updating password:", error);
         req.flash('error_msg', 'Some error occured');
-        res.render('./users/login.ejs');
-    }}
+        res.redirect('/user/login');
+    }} else{
+        req.flash('error_msg', 'OTP or Password do not match');
+        res.redirect('/user/forget-password');
+    }
 });
 
 //User Info

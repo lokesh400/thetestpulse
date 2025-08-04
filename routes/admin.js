@@ -89,7 +89,19 @@ router.get('/admin/add/new/teacher',isLoggedIn,isAdmin, (req, res) => {
 
 // POST route to add teacher
 router.post('/admin/add/new/teacher',isLoggedIn,isAdmin, async (req, res) => {
-  const { name, contactNumber, email, username, password } = req.body;
+  const { name, contactNumber, email, username } = req.body;
+
+  function generatePassword(length = 8) {
+  const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+[]{}|;:,.<>?";
+  let password = "";
+  for (let i = 0; i < length; i++) {
+    const randomChar = charset.charAt(Math.floor(Math.random() * charset.length));
+    password += randomChar;
+  }
+  return password;
+}
+
+const password = generatePassword(); // Generate a random password
 
   try {
     // Check if username or email already exists
@@ -107,7 +119,7 @@ router.post('/admin/add/new/teacher',isLoggedIn,isAdmin, async (req, res) => {
       role:'teacher'
     });
 
-    await userTeacher.register(newUser, password);
+    // await userTeacher.register(newUser, password);
 
     // Setup nodemailer
     const transporter = nodemailer.createTransport({
@@ -130,8 +142,8 @@ router.post('/admin/add/new/teacher',isLoggedIn,isAdmin, async (req, res) => {
     };
 
     await transporter.sendMail(mailOptions);
-
-    res.redirect('/admin');
+    req.flash('success_msg', 'Teacher user created successfully and credentials sent via email.')
+    res.redirect('/admin/add/new/teacher');
   } catch (err) {
     console.error(err);
     res.status(500).send('Error creating teacher user');
