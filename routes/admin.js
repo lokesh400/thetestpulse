@@ -119,7 +119,7 @@ const password = generatePassword(); // Generate a random password
       role:'teacher'
     });
 
-    // await userTeacher.register(newUser, password);
+    await userTeacher.register(newUser, password);
 
     // Setup nodemailer
     const transporter = nodemailer.createTransport({
