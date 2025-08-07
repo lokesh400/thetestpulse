@@ -1,26 +1,23 @@
-const express = require("express");
-const mongoose = require("mongoose");
+const express = require('express');
+const fs = require('fs');
+const path = require('path');
+const multer = require('multer');
 const router = express.Router();
-
 const Subject = require('../models/Subject');
 const Chapter = require('../models/Chapter');
 const Topic = require('../models/Topic');
+const mongoose = require('mongoose');
+const User = require('../models/User');
 const Question = require('../models/Question');
-const Test = require('../models/Test');
-
-const {isAdmin,isAllowed, isLoggedIn} = require('../middlewares/login')
-
-const multer = require('multer');
-const path = require('path');
 const cloudinary = require('cloudinary').v2;
-const fs = require('fs');
+const { isLoggedIn, isAllowed,isAdmin } = require('../middlewares/login');
 
 // Multer storage configuration
 const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, 'uploads/'),
   filename: (req, file, cb) => cb(null, Date.now() + path.extname(file.originalname)),
 });
-const upload = multer({ storage: storage });
+const upload = multer({ storage });
 
 // ✅ Dynamic Cloudinary Config based on Subject
 const getCloudinaryConfig = (subject) => {
@@ -50,7 +47,6 @@ const getCloudinaryConfig = (subject) => {
         api_secret: process.env.biology_api_secret
       };
     default:
-      // ✅ Default cloudinary config fallback
       return {
         cloud_name: process.env.cloud_name,
         api_key: process.env.api_key,
@@ -59,66 +55,125 @@ const getCloudinaryConfig = (subject) => {
   }
 };
 
-// ✅ File Upload Logic using dynamic Cloudinary config
+// ✅ Cloudinary Upload Wrapper
 const Upload = {
-  uploadFile: async (filePath, TopicName) => {
+  uploadFile: async (filePath, subject, TopicName) => {
     try {
-      const config = getCloudinaryConfig(TopicName);
+      const config = getCloudinaryConfig(subject);
       cloudinary.config(config);
 
       const result = await cloudinary.uploader.upload(filePath, {
         resource_type: "auto",
-        folder: TopicName?.toLowerCase() || 'default'  // Upload to folder by subject
+        folder: TopicName?.toLowerCase() || 'default'
       });
 
       return result;
     } catch (error) {
-      throw new Error('Upload failed: ' + error.message);
+      throw new Error('Cloudinary Upload failed: ' + error.message);
     }
   }
 };
 
-// ✅ Create Question Route
-router.post('/create-ques',isLoggedIn,isAllowed, upload.single("file"), async (req, res) => {
+// ✅ BULK UPLOAD ROUTE
+router.post('/create-ques', isLoggedIn, isAllowed, upload.array("files", 10), async (req, res) => {
   try {
-    const { SubjectName, ChapterName, TopicName, CorrectOption, questionType } = req.body;
+    const { subject, ChapterName, TopicName, questionType } = req.body;
+    const files = req.files;
 
-    // Upload file to Cloudinary under appropriate config
-    const result = await Upload.uploadFile(req.file.path,TopicName);
-    const imageUrl = result.secure_url;
+    if (!files || files.length === 0) {
+      return res.status(400).json({ message: 'No files uploaded.' });
+    }
 
-    // Delete local uploaded file after cloud upload
-    fs.unlink(req.file.path, (err) => {
-      if (err) console.error('Error deleting local file:', err);
-      else console.log('Local file deleted');
-    });
+    const questions = [];
 
-    // Adjust correct answer based on type
-    const answer = questionType === 'numerical' ? CorrectOption : CorrectOption - 1;
+    for (let file of files) {
+      const fileName = path.parse(file.originalname).name;
+      const correctOptionFromFile = fileName.split('-')[1];
 
-    // Save to database
-    const newQuestion = new Question({
-      addedBy:req.user.id,
-      SubjectName,
-      ChapterName,
-      TopicName,
-      Question: imageUrl,
-      Option1: "Option 1",
-      Option2: "Option 2",
-      Option3: "Option 3",
-      Option4: "Option 4",
-      CorrectOption: answer,
-      questionType
-    });
+      if (!correctOptionFromFile) {
+        console.warn(`Skipping file ${file.originalname} - invalid name format`);
+        continue;
+      }
 
-    await newQuestion.save();
+      const correctAnswer = questionType === 'numerical'
+        ? correctOptionFromFile
+        : parseInt(correctOptionFromFile) - 1;
 
-    res.status(200).json({ message: 'Question created successfully!' });
+      const cloudResult = await Upload.uploadFile(file.path, subject, TopicName);
+
+      fs.unlink(file.path, (err) => {
+        if (err) console.error('Error deleting local file:', err);
+      });
+
+      questions.push({
+        addedBy: req.user.id,
+        SubjectName: subject,
+        ChapterName,
+        TopicName,
+        Question: cloudResult.secure_url,
+        Option1: 'Option 1',
+        Option2: 'Option 2',
+        Option3: 'Option 3',
+        Option4: 'Option 4',
+        CorrectOption: correctAnswer,
+        questionType
+      });
+    }
+
+    if (questions.length === 0) {
+      return res.status(400).json({ message: 'No valid questions found to upload.' });
+    }
+
+    await Question.insertMany(questions);
+
+    res.status(200).json({ message: `${questions.length} questions uploaded successfully!` });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Upload failed: ' + error.message });
+    console.error('Bulk Upload Error:', error);
+    res.status(500).json({ message: 'Bulk upload failed: ' + error.message });
   }
 });
+
+// ✅ Create Question Route
+// router.post('/create-ques',isLoggedIn,isAllowed, upload.single("file"), async (req, res) => {
+//   try {
+//     const { subject, ChapterName, TopicName, CorrectOption, questionType } = req.body;
+
+//     // Upload file to Cloudinary under appropriate config
+//     const result = await Upload.uploadFile(req.file.path,TopicName);
+//     const imageUrl = result.secure_url;
+
+//     // Delete local uploaded file after cloud upload
+//     fs.unlink(req.file.path, (err) => {
+//       if (err) console.error('Error deleting local file:', err);
+//       else console.log('Local file deleted');
+//     });
+
+//     // Adjust correct answer based on type
+//     const answer = questionType === 'numerical' ? CorrectOption : CorrectOption - 1;
+
+//     // Save to database
+//     const newQuestion = new Question({
+//       addedBy:req.user.id,
+//       SubjectName:subject,
+//       ChapterName,
+//       TopicName,
+//       Question: imageUrl,
+//       Option1: "Option 1",
+//       Option2: "Option 2",
+//       Option3: "Option 3",
+//       Option4: "Option 4",
+//       CorrectOption: answer,
+//       questionType
+//     });
+
+//     await newQuestion.save();
+
+//     res.status(200).json({ message: 'Question created successfully!' });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ message: 'Upload failed: ' + error.message });
+//   }
+// });
 
 router.get('/create/question/bank',isLoggedIn,isAllowed, async(req,res) =>{
     res.render('./questionbank/createques.ejs')
@@ -151,44 +206,44 @@ router.get('/api/questions/:name',isLoggedIn,isAllowed, async (req,res) => {
     res.json(chapter);
   })  
   
-  router.post('/create-ques',isLoggedIn,isAllowed, upload.single("file"), async (req, res) => {
-    try {
-      const { subject, chapter, topic, correct,questionType } = req.body;
-      const result = await Upload.uploadFile(req.file.path);  // Use the path for Cloudinary upload
-      const imageUrl = result.secure_url;
-      fs.unlink(req.file.path, (err) => {
-        if (err) {
-          console.error('Error deleting local file:', err);
-        } else {
-          console.log('Local file deleted successfully');
-        }
-      });
-      var answer;
-      if(questionType=='numerical'){
-        answer = correct;
-      } else {
-        answer = correct-1;
-      }
-      const newQuestion = new Question({
-        SubjectName: subject,
-        ChapterName: chapter,
-        TopicName: topic,
-        Question: imageUrl,
-        Option1: "Option 1",
-        Option2: "Option 2",
-        Option3: "Option 3",
-        Option4: "Option 4",
-        CorrectOption: answer,
-        questionType:questionType
-      });
+//   router.post('/create-ques',isLoggedIn,isAllowed, upload.single("file"), async (req, res) => {
+//     try {
+//       const { subject, chapter, topic, correct,questionType } = req.body;
+//       const result = await Upload.uploadFile(req.file.path);  // Use the path for Cloudinary upload
+//       const imageUrl = result.secure_url;
+//       fs.unlink(req.file.path, (err) => {
+//         if (err) {
+//           console.error('Error deleting local file:', err);
+//         } else {
+//           console.log('Local file deleted successfully');
+//         }
+//       });
+//       var answer;
+//       if(questionType=='numerical'){
+//         answer = correct;
+//       } else {
+//         answer = correct-1;
+//       }
+//       const newQuestion = new Question({
+//         SubjectName: subject,
+//         ChapterName: chapter,
+//         TopicName: topic,
+//         Question: imageUrl,
+//         Option1: "Option 1",
+//         Option2: "Option 2",
+//         Option3: "Option 3",
+//         Option4: "Option 4",
+//         CorrectOption: answer,
+//         questionType:questionType
+//       });
   
-      await newQuestion.save();
-      res.status(200).json({ message: 'Question created successfully!' });
-    } catch (error) {
-      console.log(error);
-      res.status(500).json({ message: 'Upload failed: ' + error.message });
-    }
-  });
+//       await newQuestion.save();
+//       res.status(200).json({ message: 'Question created successfully!' });
+//     } catch (error) {
+//       console.log(error);
+//       res.status(500).json({ message: 'Upload failed: ' + error.message });
+//     }
+//   });
   
 router.get('/create/information',isLoggedIn,isAdmin, async (req, res) => {
   try {
