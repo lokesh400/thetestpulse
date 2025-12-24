@@ -52,15 +52,13 @@
                   </span>
                  </div>
                  <div class="unique-buttons">
-                  <button class="unique-explore">
-                        <a href="/purchase/explore/<%= batch._id %>">Explore</a>
-                  </button>
-
-
                   <!-- Show Study button if purchased or admin -->
-                  <button class="unique-buy-now">
-                      <a style="text-decoration: none; color: white;" href="/showbatch/<%= batch._id %>">Study</a>
-                  </button>
+                 
+                      <a class="unique-buy-now" style="text-decoration: none; color: white; padding-right:5px ; padding-left: 5px; border-radius: 10px;" href="/showbatch/<%= batch._id %>">
+                         <button class="unique-buy-now">
+                          View
+                         </button>
+                      </a>
             </div>
         </div>
           <% }) %>

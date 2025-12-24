@@ -60,7 +60,7 @@ const Upload = {
 
 const checkPurchasedBatch = (req, res, next) => {
     const { id } = req.params;
-    if (req.user.purchasedBatches.includes(id)|| req.user.role === 'admin') {
+    if ( req.user.role === 'admin') {
         return next();
     } else {
         return res.status(403).send('Access denied: You have not purchased this batch.');

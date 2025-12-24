@@ -58,18 +58,17 @@ const getCloudinaryConfig = (subject) => {
 // ✅ Cloudinary Upload Wrapper
 const Upload = {
   uploadFile: async (filePath, subject, TopicName) => {
+    console.log(filePath)
     try {
       const config = getCloudinaryConfig(subject);
       cloudinary.config(config);
-
       const result = await cloudinary.uploader.upload(filePath, {
         resource_type: "auto",
         folder: TopicName?.toLowerCase() || 'default'
       });
-
       return result;
     } catch (error) {
-      throw new Error('Cloudinary Upload failed: ' + error.message);
+      console.log(error)
     }
   }
 };
@@ -79,13 +78,10 @@ router.post('/create-ques', isLoggedIn, isAllowed, upload.array("files", 10), as
   try {
     const { subject, ChapterName, TopicName, questionType } = req.body;
     const files = req.files;
-
     if (!files || files.length === 0) {
       return res.status(400).json({ message: 'No files uploaded.' });
     }
-
     const questions = [];
-
     for (let file of files) {
       const fileName = path.parse(file.originalname).name;
       const correctOptionFromFile = fileName.split('-')[1];
@@ -94,17 +90,13 @@ router.post('/create-ques', isLoggedIn, isAllowed, upload.array("files", 10), as
         console.warn(`Skipping file ${file.originalname} - invalid name format`);
         continue;
       }
-
       const correctAnswer = questionType === 'numerical'
         ? correctOptionFromFile
         : parseInt(correctOptionFromFile) - 1;
-
       const cloudResult = await Upload.uploadFile(file.path, subject, TopicName);
-
       fs.unlink(file.path, (err) => {
         if (err) console.error('Error deleting local file:', err);
       });
-
       questions.push({
         addedBy: req.user.id,
         SubjectName: subject,
@@ -119,13 +111,11 @@ router.post('/create-ques', isLoggedIn, isAllowed, upload.array("files", 10), as
         questionType
       });
     }
-
     if (questions.length === 0) {
       return res.status(400).json({ message: 'No valid questions found to upload.' });
     }
-
     await Question.insertMany(questions);
-
+    console.log('Bulk Upload Successful:', questions);
     res.status(200).json({ message: `${questions.length} questions uploaded successfully!` });
   } catch (error) {
     console.error('Bulk Upload Error:', error);
@@ -133,47 +123,6 @@ router.post('/create-ques', isLoggedIn, isAllowed, upload.array("files", 10), as
   }
 });
 
-// ✅ Create Question Route
-// router.post('/create-ques',isLoggedIn,isAllowed, upload.single("file"), async (req, res) => {
-//   try {
-//     const { subject, ChapterName, TopicName, CorrectOption, questionType } = req.body;
-
-//     // Upload file to Cloudinary under appropriate config
-//     const result = await Upload.uploadFile(req.file.path,TopicName);
-//     const imageUrl = result.secure_url;
-
-//     // Delete local uploaded file after cloud upload
-//     fs.unlink(req.file.path, (err) => {
-//       if (err) console.error('Error deleting local file:', err);
-//       else console.log('Local file deleted');
-//     });
-
-//     // Adjust correct answer based on type
-//     const answer = questionType === 'numerical' ? CorrectOption : CorrectOption - 1;
-
-//     // Save to database
-//     const newQuestion = new Question({
-//       addedBy:req.user.id,
-//       SubjectName:subject,
-//       ChapterName,
-//       TopicName,
-//       Question: imageUrl,
-//       Option1: "Option 1",
-//       Option2: "Option 2",
-//       Option3: "Option 3",
-//       Option4: "Option 4",
-//       CorrectOption: answer,
-//       questionType
-//     });
-
-//     await newQuestion.save();
-
-//     res.status(200).json({ message: 'Question created successfully!' });
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ message: 'Upload failed: ' + error.message });
-//   }
-// });
 
 router.get('/create/question/bank',isLoggedIn,isAllowed, async(req,res) =>{
     res.render('./questionbank/createques.ejs')
@@ -206,45 +155,6 @@ router.get('/api/questions/:name',isLoggedIn,isAllowed, async (req,res) => {
     res.json(chapter);
   })  
   
-//   router.post('/create-ques',isLoggedIn,isAllowed, upload.single("file"), async (req, res) => {
-//     try {
-//       const { subject, chapter, topic, correct,questionType } = req.body;
-//       const result = await Upload.uploadFile(req.file.path);  // Use the path for Cloudinary upload
-//       const imageUrl = result.secure_url;
-//       fs.unlink(req.file.path, (err) => {
-//         if (err) {
-//           console.error('Error deleting local file:', err);
-//         } else {
-//           console.log('Local file deleted successfully');
-//         }
-//       });
-//       var answer;
-//       if(questionType=='numerical'){
-//         answer = correct;
-//       } else {
-//         answer = correct-1;
-//       }
-//       const newQuestion = new Question({
-//         SubjectName: subject,
-//         ChapterName: chapter,
-//         TopicName: topic,
-//         Question: imageUrl,
-//         Option1: "Option 1",
-//         Option2: "Option 2",
-//         Option3: "Option 3",
-//         Option4: "Option 4",
-//         CorrectOption: answer,
-//         questionType:questionType
-//       });
-  
-//       await newQuestion.save();
-//       res.status(200).json({ message: 'Question created successfully!' });
-//     } catch (error) {
-//       console.log(error);
-//       res.status(500).json({ message: 'Upload failed: ' + error.message });
-//     }
-//   });
-  
 router.get('/create/information',isLoggedIn,isAdmin, async (req, res) => {
   try {
     const subjects = await Subject.find({});
@@ -255,6 +165,7 @@ router.get('/create/information',isLoggedIn,isAdmin, async (req, res) => {
   }
 });
 
+
 // Add Subject
 router.post('/create/subject',isLoggedIn,isAdmin, async (req, res) => {
   try {
@@ -264,6 +175,7 @@ router.post('/create/subject',isLoggedIn,isAdmin, async (req, res) => {
     res.redirect('/create/information');
   } catch (error) {
     req.flash('error', 'Failed to add subject.');
+    console.log(error);
     res.redirect('/create/information');
   }
 });
@@ -316,6 +228,63 @@ router.post('/admin/questionbank/update/:id',isLoggedIn,isAllowed, async(req,res
    res.send(error)
  }
 })
+
+
+
+//////////////////////////////////////
+//route to delete a question//////////
+//////////////////////////////////////
+
+const extractPublicId = (url) => {
+  if (!url || !url.includes("/upload/")) return null;
+
+  return decodeURIComponent(
+    url
+      .split("/upload/")[1]
+      .split(".")[0]
+      .replace(/^v\d+\//, "")
+  );
+};
+
+router.get("/admin/questionbank/delete/:id", async (req, res) => {
+  try {
+    const ques = await Question.findById(req.params.id);
+
+    if (!ques) {
+      return res.status(404).json({ message: "Question not found" });
+    }
+
+    // Ensure this is a Cloudinary image
+    const imageUrl = ques.Question;
+    const publicId = extractPublicId(imageUrl);
+
+    if (!publicId) {
+      return res.status(400).json({
+        message: "Invalid or missing Cloudinary image URL",
+      });
+    }
+
+    console.log("Deleting Cloudinary public_id:", publicId);
+
+    const result = await cloudinary.uploader.destroy(publicId, {
+      resource_type: "image",
+      invalidate: true,
+    });
+
+    // Delete DB record only if Cloudinary deletion succeeded OR image already gone
+    if (result.result === "ok" || result.result === "not found") {
+      await Question.findByIdAndDelete(req.params.id);
+    }
+
+    res.status(200).json({
+      message: "Question deleted successfully",
+      cloudinary: result,
+    });
+  } catch (error) {
+    console.error("Cloudinary delete error:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
 
 
 module.exports = router;

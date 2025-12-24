@@ -142,4 +142,27 @@ app.use((req, res, next) => {
 });
 
 
+// const newUser = async () => {
+
+//     const name = "Lokesh Badgujjar";
+//     const contactNumber = "9315796489";
+//     const email = "lokeshbadgujjar400@gmail.com";
+//     const username = "lokesh.1@thetestpulse.com";
+//     const password = "12345678";
+  
+//       // Register new teacher
+//       const newUser = new userTeacher({
+//         name,
+//         contactNumber,
+//         email,
+//         username,
+//         role:'admin'
+//       });
+//       await userTeacher.register(newUser, password);
+//       console.log("User created successfully");
+
+// };
+
+// newUser();
+
 app.listen(port, () => console.log(`Server running on http://localhost:${port}`));
