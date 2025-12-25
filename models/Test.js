@@ -20,7 +20,7 @@ const TestSchema = new mongoose.Schema({
   questions: [QuestionSchema],
   time:Number,
   type:String,
-  testMode:String
+  testMode:String,
 });
 
 const Test = mongoose.model('Test', TestSchema);
